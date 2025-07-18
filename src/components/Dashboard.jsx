@@ -47,6 +47,13 @@ const Dashboard = () => {
   const [chats, setchats] = useState([]);
   const searchRef = useRef();
   const { socket, OnlineUsers } = useSocketContext();
+  const messagesEndRef = useRef();
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+    }
+  }, [selectedChat?.messages]);
 
   // Mock data for potential travel companions
   // const travelCompanions = [
@@ -1077,7 +1084,11 @@ const Dashboard = () => {
                         </div>
 
                         {/* Messages */}
-                        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                        <div
+                          className="flex-1 overflow-y-auto h-full p-4 space-y-4"
+                          ref={messagesEndRef}
+                          style={{ scrollBehavior: "smooth" }}
+                        >
                           {selectedChat.messages
                             ? selectedChat.messages.map((msg) => (
                                 <div
