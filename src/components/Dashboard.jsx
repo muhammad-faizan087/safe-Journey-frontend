@@ -343,13 +343,16 @@ const Dashboard = () => {
     }
   };
 
+  const getReceiverId = () => {
+    if (!selectedChat || !UserData) return null;
+    return selectedChat.participants.find((id) => id !== UserData.id);
+  };
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (message.trim()) {
-      const newMessage = await sendMessage(
-        selectedChat ? selectedChat.participants[1] : "",
-        message
-      );
+    const receiverId = getReceiverId();
+    if (message.trim() && receiverId) {
+      const newMessage = await sendMessage(receiverId, message);
       console.log("New message:", newMessage);
       console.log("📤 Socket message emitted:", newMessage);
       setMessage("");
