@@ -27,6 +27,7 @@ import {
 import Button from "./Button";
 
 import { useSocketContext } from "../Context/SocketContext.jsx";
+import { send } from "vite";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("search");
@@ -369,37 +370,60 @@ const Dashboard = () => {
   useEffect(() => {
     if (!socket) return;
 
-    const handleNewMessage = ({ message, conversationId }) => {
-      if (!message || !conversationId) return;
+    const handleNewMessage = ({
+      message,
+      conversationId,
+      senderName,
+      receiverName,
+    }) => {
+      if (!message || !conversationId || !senderName || !receiverName) return;
 
-      console.log("📥 Socket message received:", { message, conversationId });
+      console.log("📥 Socket message received:", {
+        message,
+        conversationId,
+        senderName,
+        receiverName,
+      });
 
-      // ✅ Step 1: Update sidebar conversations list
-      setchats((prevChats) =>
-        prevChats.map((chat) => {
-          if (chat._id !== conversationId) return chat;
+      setchats((prevChats) => {
+        const chatExists = prevChats.some(
+          (chat) => chat._id === conversationId
+        );
 
-          // Prevent duplicate messages
-          const messageExists = chat.messages.some(
-            (m) => m._id === message._id
-          );
-          const updatedMessages = messageExists
-            ? chat.messages
-            : [...chat.messages, message];
+        if (chatExists) {
+          return prevChats.map((chat) => {
+            if (chat._id !== conversationId) return chat;
 
-          return {
-            ...chat,
-            messages: updatedMessages,
-            lastMessage: message.message, // just the text
-          };
-        })
-      );
+            const messageExists = chat.messages.some(
+              (m) => m._id === message._id
+            );
+            const updatedMessages = messageExists
+              ? chat.messages
+              : [...chat.messages, message];
 
-      // ✅ Step 2: Update selectedChat (only if this conversation is currently open)
+            return {
+              ...chat,
+              messages: updatedMessages,
+              lastMessage: message.message,
+            };
+          });
+        } else {
+          return [
+            ...prevChats,
+            {
+              _id: conversationId,
+              messages: [message],
+              lastMessage: message.message,
+              participants: [message.senderId, message.receiverId],
+              senderName: senderName,
+              receiverName: receiverName,
+            },
+          ];
+        }
+      });
       setSelectedChat((prevChat) => {
         if (!prevChat || prevChat._id !== conversationId) return prevChat;
 
-        // Prevent duplicate messages
         const messageExists = prevChat.messages.some(
           (m) => m._id === message._id
         );
