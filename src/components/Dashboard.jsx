@@ -27,6 +27,7 @@ import {
 import Button from "./Button";
 
 import { useSocketContext } from "../Context/SocketContext.jsx";
+import sound from "../assets/notification.mp3";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("search");
@@ -48,12 +49,21 @@ const Dashboard = () => {
   const searchRef = useRef();
   const { socket, OnlineUsers } = useSocketContext();
   const messagesEndRef = useRef();
+  const matchedRef = useRef();
 
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
     }
   }, [selectedChat?.messages]);
+
+  useEffect(() => {
+    if (isActive || !isActive) {
+      if (searchRef.current) {
+        searchRef.current.disabled = !isActive;
+      }
+    }
+  }, [isActive]);
 
   // Mock data for potential travel companions
   // const travelCompanions = [
@@ -306,7 +316,7 @@ const Dashboard = () => {
           toAddress: searchData.destination,
           date: searchData.date,
           time: searchData.time,
-          status: "active",
+          status: isActive ? "active" : "inactive",
         }),
       }
     );
@@ -384,6 +394,11 @@ const Dashboard = () => {
         receiverName,
       });
 
+      const notification = new Audio(sound);
+      notification.play().catch((e) => {
+        console.error("Manual test audio play failed:", e);
+      });
+
       setchats((prevChats) => {
         const chatExists = prevChats.some(
           (chat) => chat._id === conversationId
@@ -442,7 +457,13 @@ const Dashboard = () => {
     };
   }, [socket]);
 
-  const createConversation = async (receiverId, receiverName, senderName) => {
+  const createConversation = async (
+    receiverId,
+    receiverName,
+    senderName,
+    origin,
+    destination
+  ) => {
     try {
       const response = await fetch(
         "http://localhost:3000/message/createConversation",
@@ -456,6 +477,8 @@ const Dashboard = () => {
             receiverId,
             receiverName,
             senderName,
+            origin,
+            destination,
           }),
         }
       );
@@ -467,10 +490,13 @@ const Dashboard = () => {
   };
 
   const startChat = async (companion) => {
+    console.log("Starting chat with companion:", companion);
     await createConversation(
       companion.user._id,
       companion.user.firstName + " " + companion.user.lastName,
-      UserData.firstName + " " + UserData.lastName
+      UserData.firstName + " " + UserData.lastName,
+      companion.journey.from.address,
+      companion.journey.to.address
     );
     console.log(companion);
     await getConversations();
@@ -1097,11 +1123,16 @@ const Dashboard = () => {
                             </div>
                           </div>
                           <div className="flex gap-2">
-                            <Button variant="outline" size="sm">
-                              <Phone className="h-4 w-4" />
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <User className="h-4 w-4" />
+                            <Button
+                              className="w-full sm:w-auto"
+                              ref={matchedRef}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.target.disabled = true;
+                                console.log(selectedChat);
+                              }}
+                            >
+                              Matched
                             </Button>
                           </div>
                         </div>
