@@ -27,7 +27,6 @@ import {
 import Button from "./Button";
 
 import { useSocketContext } from "../Context/SocketContext.jsx";
-import { send } from "vite";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("search");
