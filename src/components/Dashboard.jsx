@@ -28,6 +28,7 @@ import Button from "./Button";
 
 import { useSocketContext } from "../Context/SocketContext.jsx";
 import sound from "../assets/notification.mp3";
+import { format } from "date-fns";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("search");
@@ -37,8 +38,9 @@ const Dashboard = () => {
     date: "",
     time: "",
   });
-  const [isActive, setIsActive] = useState(false);
-  const [selectedChat, setSelectedChat] = useState(null);
+  const [isActive, setIsActive] = useState(true);
+  const [selectedChat, setSelectedChat] = useState();
+  const [SelectedRoute, setSelectedRoute] = useState();
   const [message, setMessage] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -49,7 +51,7 @@ const Dashboard = () => {
   const searchRef = useRef();
   const { socket, OnlineUsers } = useSocketContext();
   const messagesEndRef = useRef();
-  const matchedRef = useRef();
+  const matchedRef = useRef(false);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -64,54 +66,6 @@ const Dashboard = () => {
       }
     }
   }, [isActive]);
-
-  // Mock data for potential travel companions
-  // const travelCompanions = [
-  //   {
-  //     id: 1,
-  //     name: "Sarah Johnson",
-  //     avatar: "/api/placeholder/40/40",
-  //     department: "Computer Science",
-  //     year: "3rd Year",
-  //     rating: 4.8,
-  //     reviews: 12,
-  //     route: "Campus → Downtown Mall",
-  //     time: "6:30 PM",
-  //     verified: true,
-  //     safetyScore: 95,
-  //     mutualConnections: 3,
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Mike Chen",
-  //     avatar: "/api/placeholder/40/40",
-  //     department: "Engineering",
-  //     year: "2nd Year",
-  //     rating: 4.6,
-  //     reviews: 8,
-  //     route: "Campus → City Center",
-  //     time: "7:00 PM",
-  //     verified: true,
-  //     safetyScore: 92,
-  //     mutualConnections: 1,
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Emma Davis",
-  //     avatar: "/api/placeholder/40/40",
-  //     department: "Business",
-  //     year: "4th Year",
-  //     rating: 4.9,
-  //     reviews: 15,
-  //     route: "Campus → Westside",
-  //     time: "6:45 PM",
-  //     verified: true,
-  //     safetyScore: 98,
-  //     mutualConnections: 5,
-  //   },
-  // ];
-
-  // Mock chat data
 
   const getConversations = async () => {
     try {
@@ -161,56 +115,6 @@ const Dashboard = () => {
   useEffect(() => {
     WaitgettingData();
   }, []);
-
-  // const chats = [
-  //   {
-  //     id: 1,
-  //     name: "Sarah Johnson",
-  //     avatar: "/api/placeholder/40/40",
-  //     lastMessage: "Great! See you at the main gate at 6:30",
-  //     time: "2 min ago",
-  //     unread: 2,
-  //     online: true,
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Mike Chen",
-  //     avatar: "/api/placeholder/40/40",
-  //     lastMessage: "Are you still planning to leave at 7?",
-  //     time: "15 min ago",
-  //     unread: 0,
-  //     online: false,
-  //   },
-  // ];
-
-  // Mock messages for selected chat
-  // const messages = [
-  //   {
-  //     id: 1,
-  //     sender: "other",
-  //     text: "Hi! I saw you're going to Downtown Mall too",
-  //     time: "6:20 PM",
-  //   },
-  //   {
-  //     id: 2,
-  //     sender: "me",
-  //     text: "Yes! What time are you planning to leave?",
-  //     time: "6:22 PM",
-  //   },
-  //   {
-  //     id: 3,
-  //     sender: "other",
-  //     text: "Around 6:30 PM from the main gate. Want to share a ride?",
-  //     time: "6:25 PM",
-  //   },
-  //   { id: 4, sender: "me", text: "Perfect! I'll be there", time: "6:26 PM" },
-  //   {
-  //     id: 5,
-  //     sender: "other",
-  //     text: "Great! See you at the main gate at 6:30",
-  //     time: "6:28 PM",
-  //   },
-  // ];
 
   // const postJourneyDetails = async (
   //   fromAddress,
@@ -291,6 +195,47 @@ const Dashboard = () => {
   //   }
   // };
 
+  const deleteMatchedJourney = async (
+    receiverEmail,
+    senderEmail,
+    origin,
+    destination
+  ) => {
+    try {
+      const response = await fetch(
+        "http://localhost:3000/journeys/deleteMatchedJourney",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            receiverEmail,
+            senderEmail,
+            origin,
+            destination,
+          }),
+        }
+      );
+      const data = await response.json();
+      console.log("Matched journey deleted:", data);
+    } catch (error) {
+      console.log("Error deleting matched journey:", error);
+    }
+  };
+
+  const handleMatched = async (e) => {
+    // e.preventDefault();
+    matchedRef.current.disabled = true;
+    await deleteMatchedJourney(
+      selectedChat.receiverEmail,
+      selectedChat.senderEmail,
+      selectedChat.origin,
+      selectedChat.destination
+    );
+  };
+
   function to12HourTime(isoString) {
     const date = new Date(isoString);
     return date.toLocaleTimeString([], {
@@ -300,29 +245,52 @@ const Dashboard = () => {
     });
   }
 
+  const createJourneyAndGetCompanions = async (
+    email,
+    from,
+    to,
+    date,
+    time,
+    status
+  ) => {
+    try {
+      const res = await fetch(
+        "http://localhost:3000/journeys/createJourneyAndGetCompanions",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            fromAddress: from,
+            toAddress: to,
+            date,
+            time,
+            status,
+          }),
+        }
+      );
+      const { companions, journey } = await res.json();
+      console.log("Companions:", companions);
+      setCompanions(companions);
+    } catch (error) {
+      console.log("Error creating journey", error);
+    }
+  };
+
   const handleSearch = async (e) => {
     e.preventDefault();
     searchRef.current.blur();
     searchRef.current.disabled = true;
     searchRef.current.textContent = "Searching...";
-    const res = await fetch(
-      "http://localhost:3000/journeys/createJourneyAndGetCompanions",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: UserData.email,
-          fromAddress: searchData.origin,
-          toAddress: searchData.destination,
-          date: searchData.date,
-          time: searchData.time,
-          status: isActive ? "active" : "inactive",
-        }),
-      }
+    console.log(searchData.date, searchData.time);
+    await createJourneyAndGetCompanions(
+      UserData.email,
+      searchData.origin,
+      searchData.destination,
+      searchData.date,
+      searchData.time,
+      isActive ? "active" : "inactive"
     );
-    const { companions, journey } = await res.json();
-    console.log("Companions:", companions);
-    setCompanions(companions);
     setSearchData({
       origin: "",
       destination: "",
@@ -514,6 +482,25 @@ const Dashboard = () => {
   const handleChatSelect = (chat) => {
     setSelectedChat(chat);
     setShowMobileChat(true);
+  };
+
+  const handleRouteSelect = async (e, route) => {
+    e.preventDefault();
+    setSelectedRoute(route);
+    const now = new Date();
+    const date = format(now, "yyyy-MM-dd");
+    const time = format(now, "HH:mm");
+    console.log(date, time);
+    // setShowMobileChat(true);
+    await createJourneyAndGetCompanions(
+      UserData.email,
+      route.from,
+      route.to,
+      date,
+      time,
+      "active"
+    );
+    e.target.textContent === "Activate" ? "DeActivate" : "Activate";
   };
 
   return (
@@ -911,46 +898,47 @@ const Dashboard = () => {
                     Available Travel Companions
                   </h3>
                   <div className="space-y-4">
-                    {Companions.map((companion, index) =>
-                      companion.user ? (
-                        <motion.div
-                          key={index}
-                          className="border rounded-lg p-4 hover:shadow-md transition-shadow"
-                          initial={{ opacity: 0, translateY: "-20%" }}
-                          whileInView={{
-                            opacity: 1,
-                            translateY: "0",
-                            transition: {
-                              duration: 0.6,
-                              ease: "easeOut",
-                            },
-                          }}
-                          viewport={{ once: true }}
-                        >
-                          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                            <div className="flex items-start gap-3 sm:gap-4">
-                              <img
-                                src="/profile.svg"
-                                alt={
-                                  companion.user.firstName +
-                                  companion.user.lastName
-                                }
-                                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex-shrink-0"
-                              />
-                              <div className="min-w-0 flex-1">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <h4 className="font-semibold text-sm sm:text-base truncate">
-                                    {companion.user.firstName +
-                                      companion.user.lastName}
-                                  </h4>
-                                  {companion.user.isVerified && (
-                                    <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
-                                  )}
-                                </div>
-                                <p className="text-xs sm:text-sm text-gray-600 mb-1">
-                                  Status : {companion.journey.status}
-                                </p>
-                                {/* <div className="flex items-center gap-1 mb-2">
+                    {Companions || Companions.length > 0 ? (
+                      Companions.map((companion, index) =>
+                        companion.user ? (
+                          <motion.div
+                            key={index}
+                            className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                            initial={{ opacity: 0, translateY: "-20%" }}
+                            whileInView={{
+                              opacity: 1,
+                              translateY: "0",
+                              transition: {
+                                duration: 0.6,
+                                ease: "easeOut",
+                              },
+                            }}
+                            viewport={{ once: true }}
+                          >
+                            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                              <div className="flex items-start gap-3 sm:gap-4">
+                                <img
+                                  src="/profile.svg"
+                                  alt={
+                                    companion.user.firstName +
+                                    companion.user.lastName
+                                  }
+                                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex-shrink-0"
+                                />
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <h4 className="font-semibold text-sm sm:text-base truncate">
+                                      {companion.user.firstName +
+                                        companion.user.lastName}
+                                    </h4>
+                                    {companion.user.isVerified && (
+                                      <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                                    )}
+                                  </div>
+                                  <p className="text-xs sm:text-sm text-gray-600 mb-1">
+                                    Status : {companion.journey.status}
+                                  </p>
+                                  {/* <div className="flex items-center gap-1 mb-2">
                                   <Star className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-400 fill-current" />
                                   <span className="text-xs sm:text-sm">
                                     {companion.rating}
@@ -959,55 +947,61 @@ const Dashboard = () => {
                                     ({companion.reviews} reviews)
                                   </span>
                                 </div> */}
-                                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-2 text-xs sm:text-sm text-gray-600">
-                                  <div className="flex items-center gap-1">
-                                    <MapPin className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-                                    <div className="truncate flex gap-1">
-                                      {companion.journey.from.address}{" "}
-                                      <ArrowRight />
-                                      {companion.journey.to.address}
+                                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-2 text-xs sm:text-sm text-gray-600">
+                                    <div className="flex items-center gap-1">
+                                      <MapPin className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                                      <div className="truncate flex gap-1">
+                                        {companion.journey.from.address}{" "}
+                                        <ArrowRight />
+                                        {companion.journey.to.address}
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                      <Clock className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+                                      <span>
+                                        {to12HourTime(companion.journey.time)}
+                                      </span>
                                     </div>
                                   </div>
-                                  <div className="flex items-center gap-1">
-                                    <Clock className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
-                                    <span>
-                                      {to12HourTime(companion.journey.time)}
+                                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm">
+                                    <span className="text-green-600">
+                                      Safety Score: {companion.safetyScore}%
+                                    </span>
+                                    <span className="text-blue-600">
+                                      {companion.mutualConnections} mutual
+                                      connections
                                     </span>
                                   </div>
                                 </div>
-                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm">
-                                  <span className="text-green-600">
-                                    Safety Score: {companion.safetyScore}%
+                              </div>
+                              <div className="flex gap-2 sm:flex-col lg:flex-row">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => startChat(companion)}
+                                  className="flex-1 sm:flex-none"
+                                >
+                                  <MessageCircle className="h-4 w-4 mr-1" />
+                                  <span className="hidden sm:inline">
+                                    Message
                                   </span>
-                                  <span className="text-blue-600">
-                                    {companion.mutualConnections} mutual
-                                    connections
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  className="flex-1 sm:flex-none"
+                                >
+                                  <Users className="h-4 w-4 mr-1" />
+                                  <span className="hidden sm:inline">
+                                    Connect
                                   </span>
-                                </div>
+                                </Button>
                               </div>
                             </div>
-                            <div className="flex gap-2 sm:flex-col lg:flex-row">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => startChat(companion)}
-                                className="flex-1 sm:flex-none"
-                              >
-                                <MessageCircle className="h-4 w-4 mr-1" />
-                                <span className="hidden sm:inline">
-                                  Message
-                                </span>
-                              </Button>
-                              <Button size="sm" className="flex-1 sm:flex-none">
-                                <Users className="h-4 w-4 mr-1" />
-                                <span className="hidden sm:inline">
-                                  Connect
-                                </span>
-                              </Button>
-                            </div>
-                          </div>
-                        </motion.div>
-                      ) : null
+                          </motion.div>
+                        ) : null
+                      )
+                    ) : (
+                      <h1>No Active Companions</h1>
                     )}
                   </div>
                 </div>
@@ -1126,11 +1120,7 @@ const Dashboard = () => {
                             <Button
                               className="w-full sm:w-auto"
                               ref={matchedRef}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.target.disabled = true;
-                                console.log(selectedChat);
-                              }}
+                              onClick={handleMatched}
                             >
                               Matched
                             </Button>
@@ -1249,7 +1239,13 @@ const Dashboard = () => {
                             >
                               Edit
                             </Button> */}
-                            <Button size="sm" className="flex-1 sm:flex-none">
+                            <Button
+                              size="sm"
+                              className="flex-1 sm:flex-none"
+                              onClick={(e) => {
+                                handleRouteSelect(e, route);
+                              }}
+                            >
                               Activate
                             </Button>
                           </div>
