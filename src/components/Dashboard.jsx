@@ -43,6 +43,7 @@ const Dashboard = () => {
   const [SelectedRoute, setSelectedRoute] = useState();
   const [message, setMessage] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
+  const [NotificationsArray, setNotificationsArray] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showMobileChat, setShowMobileChat] = useState(false);
   const [UserData, setUserData] = useState("");
@@ -103,6 +104,7 @@ const Dashboard = () => {
       const data = await response.json();
       // console.log(data);
       setUserData(data);
+      setNotificationsArray(data.Notifications);
     } catch (error) {
       console.log("Error", error);
     }
@@ -344,28 +346,61 @@ const Dashboard = () => {
     }
   };
 
+  const sendNotification = async (email, notification) => {
+    try {
+      const res = await fetch(
+        "http://localhost:3000/notify/sendNotification/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            email,
+            notification,
+          }),
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+      setNotificationsArray((prev) => [...prev, notification]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (!socket) return;
 
-    const handleNewMessage = ({
+    const handleNewMessage = async ({
       message,
       conversationId,
       senderName,
       receiverName,
+      type,
     }) => {
-      if (!message || !conversationId || !senderName || !receiverName) return;
+      if (!message || !conversationId || !senderName || !receiverName || !type)
+        return;
 
       console.log("📥 Socket message received:", {
         message,
         conversationId,
         senderName,
         receiverName,
+        type,
       });
 
-      const notification = new Audio(sound);
-      notification.play().catch((e) => {
-        console.error("Manual test audio play failed:", e);
-      });
+      if (type === "Received") {
+        const notification = new Audio(sound);
+        notification.play().catch((e) => {
+          console.error("Manual test audio play failed:", e);
+        });
+        await sendNotification(
+          UserData.email,
+          `You've received a new message from ${senderName}`
+        );
+      }
 
       setchats((prevChats) => {
         const chatExists = prevChats.some(
@@ -487,20 +522,58 @@ const Dashboard = () => {
   const handleRouteSelect = async (e, route) => {
     e.preventDefault();
     setSelectedRoute(route);
-    const now = new Date();
-    const date = format(now, "yyyy-MM-dd");
-    const time = format(now, "HH:mm");
-    console.log(date, time);
-    // setShowMobileChat(true);
-    await createJourneyAndGetCompanions(
-      UserData.email,
-      route.from,
-      route.to,
-      date,
-      time,
-      "active"
-    );
-    e.target.textContent === "Activate" ? "DeActivate" : "Activate";
+
+    if (e.target.textContent === "Activate") {
+      e.target.textContent = "Activating...";
+      const now = new Date();
+      const date = format(now, "yyyy-MM-dd");
+      const time = format(now, "HH:mm");
+      // setShowMobileChat(true);
+      await createJourneyAndGetCompanions(
+        UserData.email,
+        route.from,
+        route.to,
+        date,
+        time,
+        "active"
+      );
+      e.target.textContent = "DeActivate";
+    } else if (e.target.textContent === "DeActivate") {
+      e.target.textContent = "DeActivating...";
+      await deleteMatchedJourney(
+        "dummyemail@gmail.com",
+        UserData.email,
+        route.from,
+        route.to
+      );
+      e.target.textContent = "Activate";
+    }
+  };
+
+  const Notify = async (email) => {
+    try {
+      const response = await fetch("http://localhost:3000/notify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          email,
+        }),
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  };
+
+  const handleNotifyContact = async (e, contact) => {
+    e.preventDefault();
+    e.target.textContent = "Notifying...";
+    await Notify(contact.email);
+    e.target.textContent = "Notify";
   };
 
   return (
@@ -589,20 +662,29 @@ const Dashboard = () => {
                       <h3 className="font-semibold">Notifications</h3>
                     </div>
                     <div className="max-h-64 overflow-y-auto">
-                      <div className="p-3 border-b hover:bg-gray-50">
-                        <div className="flex items-start gap-3">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
-                          <div>
-                            <p className="text-sm">
-                              Sarah Johnson accepted your travel request
-                            </p>
-                            <p className="text-xs text-gray-500">
+                      {NotificationsArray.length > 0 ? (
+                        NotificationsArray.map((notification, index) => {
+                          return (
+                            <div
+                              className="p-3 border-b hover:bg-gray-50"
+                              key={index}
+                            >
+                              <div className="flex items-start gap-3">
+                                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                                <div>
+                                  <p className="text-sm">{notification}</p>
+                                  {/* <p className="text-xs text-gray-500">
                               5 minutes ago
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="p-3 border-b hover:bg-gray-50">
+                            </p> */}
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <h1 className="p-3">No Notifications To Show</h1>
+                      )}
+                      {/* <div className="p-3 border-b hover:bg-gray-50">
                         <div className="flex items-start gap-3">
                           <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
                           <div>
@@ -614,7 +696,7 @@ const Dashboard = () => {
                             </p>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 )}
@@ -1210,10 +1292,10 @@ const Dashboard = () => {
                   <h2 className="text-lg sm:text-xl font-semibold">
                     My Routes
                   </h2>
-                  <Button className="w-full sm:w-auto">
+                  {/* <Button className="w-full sm:w-auto">
                     <Plus className="h-4 w-4 mr-2" />
                     Add Route
-                  </Button>
+                  </Button> */}
                 </div>
                 <div className="space-y-4">
                   {UserData.routes.map((route, index) => {
@@ -1241,7 +1323,7 @@ const Dashboard = () => {
                             </Button> */}
                             <Button
                               size="sm"
-                              className="flex-1 sm:flex-none"
+                              className="flex-1 sm:flex-none cursor-pointer bg-green-500"
                               onClick={(e) => {
                                 handleRouteSelect(e, route);
                               }}
@@ -1278,11 +1360,17 @@ const Dashboard = () => {
                                   {contact.name}({contact.relation})
                                 </p>
                                 <p className="text-xs sm:text-sm text-gray-600">
-                                  {contact.phone}
+                                  {contact.email}
                                 </p>
                               </div>
-                              <Button variant="outline" size="sm">
-                                Edit
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={(e) => {
+                                  handleNotifyContact(e, contact);
+                                }}
+                              >
+                                Notify
                               </Button>
                             </div>
                           );

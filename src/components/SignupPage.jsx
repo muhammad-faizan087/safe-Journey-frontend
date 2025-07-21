@@ -816,14 +816,13 @@ const SignupPage = () => {
                               {/* Phone */}
                               <div className="space-y-2">
                                 <label className="text-sm font-medium leading-none">
-                                  Phone Number
+                                  Phone Number (Optional)
                                 </label>
                                 <input
                                   name="emergencyContact.phone"
                                   placeholder="Emergency contact number"
                                   className="flex h-10 w-full rounded-md border px-3 py-2 text-sm"
                                   value={contact.phone}
-                                  required={true}
                                   onChange={(e) =>
                                     handleChange(e, index, "emergencyContact")
                                   }
@@ -833,12 +832,13 @@ const SignupPage = () => {
                               {/* Email */}
                               <div className="space-y-2">
                                 <label className="text-sm font-medium leading-none">
-                                  Email (Optional)
+                                  Email
                                 </label>
                                 <input
                                   type="email"
                                   name="emergencyContact.email"
                                   placeholder="Email address"
+                                  required={true}
                                   className="flex h-10 w-full rounded-md border px-3 py-2 text-sm"
                                   value={contact.email}
                                   onChange={(e) =>
