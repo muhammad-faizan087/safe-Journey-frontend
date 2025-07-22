@@ -29,6 +29,7 @@ import Button from "./Button";
 import { useSocketContext } from "../Context/SocketContext.jsx";
 import sound from "../assets/notification.mp3";
 import { format } from "date-fns";
+import AutoPlaceInput from "./api try.jsx";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("search");
@@ -53,6 +54,11 @@ const Dashboard = () => {
   const { socket, OnlineUsers } = useSocketContext();
   const messagesEndRef = useRef();
   const matchedRef = useRef(false);
+  const MessageButtonRef = useRef();
+
+  const now = new Date();
+  const Currentdate = format(now, "yyyy-MM-dd");
+  const Currenttime = format(now, "HH:mm");
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -284,7 +290,7 @@ const Dashboard = () => {
     searchRef.current.blur();
     searchRef.current.disabled = true;
     searchRef.current.textContent = "Searching...";
-    console.log(searchData.date, searchData.time);
+    console.log(searchData.origin, searchData.destination);
     await createJourneyAndGetCompanions(
       UserData.email,
       searchData.origin,
@@ -305,7 +311,7 @@ const Dashboard = () => {
     searchRef.current.blur(false);
   };
 
-  const sendMessage = async (id, message) => {
+  const sendMessage = async (id, message, senderEmail) => {
     if (!selectedChat) return;
     try {
       const response = await fetch(
@@ -319,6 +325,7 @@ const Dashboard = () => {
           body: JSON.stringify({
             message,
             receiverId: id,
+            senderEmail,
           }),
         }
       );
@@ -335,18 +342,59 @@ const Dashboard = () => {
     return selectedChat.participants.find((id) => id !== UserData.id);
   };
 
+  // const handleSendMessage = async (e) => {
+  //   e.preventDefault();
+  //   MessageButtonRef.current.disabled = true;
+  //   const receiverId = getReceiverId();
+  //   if (message.trim() && receiverId) {
+  //     const newMessage = await sendMessage(receiverId, message, UserData.email);
+  //     MessageButtonRef.current.disabled = false;
+  //     console.log("New message:", newMessage);
+  //     console.log("📤 Socket message emitted:", newMessage);
+  //     setMessage("");
+  //   }
+  // };
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    const receiverId = getReceiverId();
-    if (message.trim() && receiverId) {
-      const newMessage = await sendMessage(receiverId, message);
-      console.log("New message:", newMessage);
-      console.log("📤 Socket message emitted:", newMessage);
-      setMessage("");
+    if (!message.trim()) return;
+
+    const receiverId = getReceiverId(); // implement this to get the active chat's other user ID
+    const tempId = Math.random().toString(36);
+    const optimisticMessage = {
+      _id: tempId,
+      message,
+      senderId: UserData.id,
+      receiverId,
+      createdAt: new Date().toISOString(),
+      clientId: tempId,
+    };
+
+    // Show immediately
+    setSelectedChat((prev) => ({
+      ...prev,
+      messages: [...(prev?.messages || []), optimisticMessage],
+    }));
+
+    setMessage("");
+
+    try {
+      const data = await sendMessage(receiverId, message, UserData.email);
+      if (data.success) {
+        // Replace optimistic message with actual one
+        setSelectedChat((prev) => ({
+          ...prev,
+          messages: prev.messages.map((msg) =>
+            msg._id === tempId ? data.newMessage : msg
+          ),
+        }));
+      }
+    } catch (error) {
+      console.error("Send error:", error);
     }
   };
 
-  const sendNotification = async (email, notification) => {
+  const sendNotification = async (receiverId, message, time) => {
     try {
       const res = await fetch(
         "http://localhost:3000/notify/sendNotification/",
@@ -357,14 +405,15 @@ const Dashboard = () => {
           },
           credentials: "include",
           body: JSON.stringify({
-            email,
-            notification,
+            receiverId,
+            message,
+            time,
           }),
         }
       );
       const data = await res.json();
       console.log(data);
-      setNotificationsArray((prev) => [...prev, notification]);
+      setNotificationsArray((prev) => [{ message, time }, ...prev]);
     } catch (error) {
       console.log(error);
     }
@@ -379,8 +428,16 @@ const Dashboard = () => {
       senderName,
       receiverName,
       type,
+      receiverId,
     }) => {
-      if (!message || !conversationId || !senderName || !receiverName || !type)
+      if (
+        !message ||
+        !conversationId ||
+        !senderName ||
+        !receiverName ||
+        !type ||
+        !receiverId
+      )
         return;
 
       console.log("📥 Socket message received:", {
@@ -389,6 +446,7 @@ const Dashboard = () => {
         senderName,
         receiverName,
         type,
+        receiverId,
       });
 
       if (type === "Received") {
@@ -396,10 +454,12 @@ const Dashboard = () => {
         notification.play().catch((e) => {
           console.error("Manual test audio play failed:", e);
         });
-        await sendNotification(
-          UserData.email,
-          `You've received a new message from ${senderName}`
-        );
+        // const FullTime = new Date().toISOString();
+        // await sendNotification(
+        //   receiverId,
+        //   `You've received a new message from ${senderName}`,
+        //   FullTime
+        // );
       }
 
       setchats((prevChats) => {
@@ -465,7 +525,8 @@ const Dashboard = () => {
     receiverName,
     senderName,
     origin,
-    destination
+    destination,
+    senderEmail
   ) => {
     try {
       const response = await fetch(
@@ -482,6 +543,7 @@ const Dashboard = () => {
             senderName,
             origin,
             destination,
+            senderEmail,
           }),
         }
       );
@@ -492,20 +554,24 @@ const Dashboard = () => {
     }
   };
 
-  const startChat = async (companion) => {
+  const startChat = async (e, companion) => {
     console.log("Starting chat with companion:", companion);
+    e.target.textContent = "...";
+    e.target.disabled = true;
     await createConversation(
       companion.user._id,
       companion.user.firstName + " " + companion.user.lastName,
       UserData.firstName + " " + UserData.lastName,
       companion.journey.from.address,
-      companion.journey.to.address
+      companion.journey.to,
+      UserData.email
     );
-    console.log(companion);
     await getConversations();
     setActiveTab("messages");
     setShowMobileChat(true);
     setSidebarOpen(false);
+    e.target.textContent = "Message";
+    e.target.disabled = false;
   };
 
   const handleTabChange = (tab) => {
@@ -525,16 +591,13 @@ const Dashboard = () => {
 
     if (e.target.textContent === "Activate") {
       e.target.textContent = "Activating...";
-      const now = new Date();
-      const date = format(now, "yyyy-MM-dd");
-      const time = format(now, "HH:mm");
       // setShowMobileChat(true);
       await createJourneyAndGetCompanions(
         UserData.email,
         route.from,
         route.to,
-        date,
-        time,
+        Currentdate,
+        Currenttime,
         "active"
       );
       e.target.textContent = "DeActivate";
@@ -652,7 +715,7 @@ const Dashboard = () => {
                 >
                   <Bell className="h-5 w-5 sm:h-6 sm:w-6" />
                   <span className="absolute -top-1 -right-1 h-3 w-3 sm:h-4 sm:w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                    3
+                    {NotificationsArray.length}
                   </span>
                 </button>
 
@@ -672,10 +735,14 @@ const Dashboard = () => {
                               <div className="flex items-start gap-3">
                                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
                                 <div>
-                                  <p className="text-sm">{notification}</p>
-                                  {/* <p className="text-xs text-gray-500">
-                              5 minutes ago
-                            </p> */}
+                                  <p className="text-sm">
+                                    {notification.message}
+                                  </p>
+                                  {
+                                    <p className="text-xs text-gray-500">
+                                      {to12HourTime(notification.time)}
+                                    </p>
+                                  }
                                 </div>
                               </div>
                             </div>
@@ -773,11 +840,11 @@ const Dashboard = () => {
                 >
                   <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5" />
                   Messages
-                  {chats.some((chat) => chat.unread > 0) && (
+                  {/* {chats.some((chat) => chat.unread > 0) && (
                     <span className="ml-auto bg-red-500 text-white text-xs rounded-full px-2 py-1">
                       {chats.reduce((sum, chat) => sum + chat.unread, 0)}
                     </span>
-                  )}
+                  )} */}
                 </button>
                 <button
                   onClick={() => handleTabChange("routes")}
@@ -877,7 +944,7 @@ const Dashboard = () => {
                   <h2 className="text-lg sm:text-xl font-semibold mb-4">
                     Find Travel Companions
                   </h2>
-                  <motion.form
+                  {/* <motion.form
                     onSubmit={handleSearch}
                     className="space-y-4"
                     initial={{ opacity: 0, translateY: "-20%" }}
@@ -963,6 +1030,85 @@ const Dashboard = () => {
                         />
                       </div>
                     </div>
+                    <Button
+                      type="submit"
+                      className="w-full sm:w-auto"
+                      ref={searchRef}
+                    >
+                      <Search className="h-4 w-4 mr-2" />
+                      Search Companions
+                    </Button>
+                  </motion.form> */}
+                  <motion.form
+                    onSubmit={handleSearch}
+                    className="space-y-4"
+                    initial={{ opacity: 0, translateY: "-20%" }}
+                    whileInView={{
+                      opacity: 1,
+                      translateY: "0",
+                      transition: {
+                        duration: 0.6,
+                        ease: "easeOut",
+                      },
+                    }}
+                    viewport={{ once: true }}
+                  >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <AutoPlaceInput
+                        label="From"
+                        value={searchData.origin}
+                        onChange={(val) =>
+                          setSearchData((prev) => ({ ...prev, origin: val }))
+                        }
+                      />
+
+                      <AutoPlaceInput
+                        label="To"
+                        value={searchData.destination}
+                        onChange={(val) =>
+                          setSearchData((prev) => ({
+                            ...prev,
+                            destination: val,
+                          }))
+                        }
+                      />
+
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          Date
+                        </label>
+                        <input
+                          type="date"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent text-sm sm:text-base"
+                          value={searchData.date}
+                          required={true}
+                          onChange={(e) =>
+                            setSearchData({
+                              ...searchData,
+                              date: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          Preferred Time
+                        </label>
+                        <input
+                          type="time"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent text-sm sm:text-base"
+                          value={searchData.time}
+                          required={true}
+                          onChange={(e) =>
+                            setSearchData({
+                              ...searchData,
+                              time: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+
                     <Button
                       type="submit"
                       className="w-full sm:w-auto"
@@ -1060,7 +1206,9 @@ const Dashboard = () => {
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  onClick={() => startChat(companion)}
+                                  onClick={(e) => {
+                                    startChat(e, companion);
+                                  }}
                                   className="flex-1 sm:flex-none"
                                 >
                                   <MessageCircle className="h-4 w-4 mr-1" />
@@ -1144,11 +1292,11 @@ const Dashboard = () => {
                                 {chat.lastMessage}
                               </p>
                             </div>
-                            {chat.unread > 0 && (
+                            {/* {chat.unread > 0 && (
                               <div className="w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                                 {chat.unread}
                               </div>
-                            )}
+                            )} */}
                           </div>
                         </div>
                       ))}
@@ -1264,7 +1412,11 @@ const Dashboard = () => {
                               value={message}
                               onChange={(e) => setMessage(e.target.value)}
                             />
-                            <Button type="submit" size="sm">
+                            <Button
+                              type="submit"
+                              size="sm"
+                              ref={MessageButtonRef}
+                            >
                               <Send className="h-4 w-4" />
                             </Button>
                           </div>

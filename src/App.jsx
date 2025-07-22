@@ -5,6 +5,8 @@ import LoginPage from "./components/LoginPage";
 import SignupPage from "./components/SignupPage";
 import ForgotPasswordPage from "./components/ForgotPasswordPage";
 import Dashboard from "./components/Dashboard";
+import GoMapsAutocomplete from "./components/Autocomplete api";
+import AutoPlaceInput from "./components/api try";
 
 function App() {
   const router = createBrowserRouter([
@@ -45,6 +47,14 @@ function App() {
       element: (
         <>
           <Dashboard />
+        </>
+      ),
+    },
+    {
+      path: "/autocomplete",
+      element: (
+        <>
+          <AutoPlaceInput />
         </>
       ),
     },
