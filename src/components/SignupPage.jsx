@@ -285,7 +285,7 @@ const SignupPage = () => {
       console.log("Success:", data);
       if (data.success) {
         VerifyRef.current.disabled = true;
-        VerificationCodeRef.current.disabled = true;
+        // VerificationCodeRef.current.disabled = true;
         ResendCodeRef.current.disabled = true;
         setVerified(true);
       }
@@ -533,7 +533,13 @@ const SignupPage = () => {
                       >
                         Cancel
                       </Button>
-                      <Button type="submit" className="gap-1 cursor-pointer">
+                      <Button
+                        type="submit"
+                        className="gap-1 cursor-pointer"
+                        disabled={
+                          formData.password !== formData.confirmPassword
+                        }
+                      >
                         Continue
                         <ArrowRight className="h-4 w-4" />
                       </Button>
@@ -599,6 +605,8 @@ const SignupPage = () => {
                                 type="button"
                                 className="cursor-pointer"
                                 onClick={(e) => {
+                                  e.target.textContent = "Sent";
+                                  e.target.disabled = true;
                                   postVCode(
                                     e.target.previousElementSibling.value
                                   );
@@ -678,7 +686,7 @@ const SignupPage = () => {
                                 name="idFront"
                                 type="file"
                                 required={true}
-                                className="mt-1 flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="mt-1 flex cursor-pointer w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                 onChange={handleChange}
                               />
                             </div>
@@ -694,7 +702,7 @@ const SignupPage = () => {
                                 name="idBack"
                                 type="file"
                                 required={true}
-                                className="mt-1 flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="mt-1 flex w-full cursor-pointer rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                 onChange={handleChange}
                               />
                             </div>
@@ -734,7 +742,7 @@ const SignupPage = () => {
                     </Button> */}
                     <Button
                       type="submit"
-                      className="gap-1"
+                      className="gap-1 cursor-pointer"
                       disabled={!Verified}
                     >
                       Continue
@@ -977,7 +985,7 @@ const SignupPage = () => {
                     </div>
                   </div>
                   <div className="flex items-center p-6 pt-0 justify-end">
-                    <Button type="submit" className="gap-1">
+                    <Button type="submit" className="gap-1 cursor-pointer">
                       Complete Setup
                       <ArrowRight className="h-4 w-4" />
                     </Button>
@@ -1040,7 +1048,7 @@ const SignupPage = () => {
                 </div>
                 <div className="flex items-center p-6 pt-0 justify-center">
                   <Button
-                    className="bg-rose-500 hover:bg-rose-600"
+                    className="bg-rose-500 hover:bg-rose-600 cursor-pointer"
                     onClick={() => (window.location.href = "/login")}
                   >
                     Go to Login
@@ -1054,7 +1062,7 @@ const SignupPage = () => {
             Already have an account?{" "}
             <a
               href="/login"
-              className="font-medium text-rose-500 underline-offset-4 hover:underline"
+              className="font-medium text-rose-500 underline-offset-4 hover:underline cursor-pointer"
             >
               Sign in
             </a>

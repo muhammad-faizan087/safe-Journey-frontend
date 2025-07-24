@@ -37,7 +37,7 @@ const ForgotPasswordPage = () => {
       console.log("Success:", data);
       if (data.success) {
         VerifyRef.current.disabled = true;
-        VerificationCodeRef.current.disabled = true;
+        // VerificationCodeRef.current.disabled = true;
         setVerified(true);
       }
     } catch (error) {
@@ -179,6 +179,8 @@ const ForgotPasswordPage = () => {
                     type="button"
                     className="cursor-pointer"
                     onClick={(e) => {
+                      e.target.textContent = "Sent";
+                      e.target.disabled = true;
                       postVCode(e.target.previousElementSibling.value);
                     }}
                     ref={VerificationCodeRef}
