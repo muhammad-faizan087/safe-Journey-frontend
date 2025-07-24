@@ -269,8 +269,8 @@ const HomePage = () => {
       <Navbar />
       <main className="flex flex-col items-center">
         {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-white to-rose-50 py-8 sm:py-16 md:py-20 lg:py-24 w-full flex justify-center items-center">
-          <div className="container relative flex flex-col lg:flex-row justify-between items-center gap-8 sm:gap-12 lg:gap-20 px-4 sm:px-6 md:px-8 mx-auto max-w-7xl">
+        <section className="relative overflow-hidden bg-gradient-to-b from-white to-rose-50 py-8 sm:py-12 md:py-16 lg:py-28 w-full min-h-[90vh] flex justify-center items-center">
+          <div className="container relative flex flex-col lg:flex-row justify-between items-center gap-8 sm:gap-12 lg:gap-20 px-2 sm:px-4 md:px-6 mx-auto max-w-7xl">
             <motion.div
               initial={{ opacity: 0, translateX: "-100%" }}
               whileInView={{

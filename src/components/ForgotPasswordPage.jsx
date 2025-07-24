@@ -1,15 +1,106 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Shield, ArrowLeft } from "lucide-react";
 import Button from "../components/Button";
+import { div } from "motion/react-client";
 
 const ForgotPasswordPage = () => {
-  const [email, setEmail] = useState("");
+  // const [email, setEmail] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    verificationCode: "",
+  });
+  const [Verified, setVerified] = useState(false);
+  const [resMessage, setresMessage] = useState(false);
+  const [response, setresponse] = useState("");
 
-  const handleSubmit = (e) => {
+  const VerifyRef = useRef();
+  const VerificationCodeRef = useRef();
+  const ChangePassRef = useRef();
+
+  const verifyCode = async (code) => {
+    try {
+      const response = await fetch(
+        "http://localhost:3000/verification/verfiyCode",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // Tells server we're sending JSON
+          },
+          body: JSON.stringify({
+            code,
+          }),
+        }
+      );
+
+      const data = await response.json(); // Convert response to JSON
+      console.log("Success:", data);
+      if (data.success) {
+        VerifyRef.current.disabled = true;
+        VerificationCodeRef.current.disabled = true;
+        setVerified(true);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const postVCode = async (email) => {
+    try {
+      const response = await fetch("http://localhost:3000/verification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Tells server we're sending JSON
+        },
+        body: JSON.stringify({
+          email,
+        }),
+      });
+
+      const data = await response.json(); // Convert response to JSON
+      console.log("Success:", data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const ChangePass = async (email, newPassword) => {
+    try {
+      const res = await fetch("http://localhost:3000/login/changePassword", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          newPassword,
+        }),
+      });
+
+      const data = await res.json();
+      console.log("Success:", data);
+      setresponse(data);
+    } catch (error) {
+      console.log("Error Changing Password", error);
+      setresponse(error);
+    }
+    setresMessage(true);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle password reset logic here
-    console.log("Password reset requested for:", email);
-    // Show success message or redirect
+    ChangePassRef.current.disabled = true;
+    ChangePassRef.current.textContent = "Updating...";
+    await ChangePass(formData.email, formData.password);
+    ChangePassRef.current.disabled = false;
+    ChangePassRef.current.textContent = "Change Password";
+  };
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   return (
@@ -48,9 +139,13 @@ const ForgotPasswordPage = () => {
                 link to reset your password
               </p>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form
+              onSubmit={(e) => {
+                handleSubmit(e);
+              }}
+            >
               <div className="p-6 space-y-4">
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <label
                     htmlFor="email"
                     className="text-sm font-medium leading-none"
@@ -66,20 +161,88 @@ const ForgotPasswordPage = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
+                </div> */}
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    placeholder="your.name@university.edu"
+                    name="email"
+                    className="flex h-10 flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    value={formData.email}
+                    onChange={(e) => {
+                      handleChange(e);
+                    }}
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    type="button"
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      postVCode(e.target.previousElementSibling.value);
+                    }}
+                    ref={VerificationCodeRef}
+                  >
+                    Send Code
+                  </Button>
                 </div>
-                <div className="rounded-lg border bg-muted p-3 text-sm">
-                  <p>
-                    The password reset link will be sent to your university
-                    email address. If you no longer have access to your
-                    university email, please contact support.
-                  </p>
+                <div className="flex gap-2">
+                  <input
+                    id="verification-code"
+                    name="verificationCode"
+                    placeholder="Enter 6-digit code"
+                    maxLength="6"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    value={formData.verificationCode || ""}
+                    onChange={(e) => {
+                      handleChange(e);
+                    }}
+                  />
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    type="button"
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      verifyCode(e.target.previousElementSibling.value);
+                    }}
+                    ref={VerifyRef}
+                  >
+                    Verify
+                  </Button>
                 </div>
+                {Verified && (
+                  <p className="text-green-500">Email Verified Successfully.</p>
+                )}
+                {Verified && (
+                  <input
+                    id="password"
+                    name="password"
+                    placeholder="Enter new password"
+                    required={true}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    value={formData.password || ""}
+                    onChange={(e) => {
+                      handleChange(e);
+                    }}
+                  />
+                )}
               </div>
-              <div className="flex items-center p-6 pt-0">
-                <Button type="submit" className="w-full">
-                  Send Reset Link
+              <div className="flex items-center px-6 py-3 pt-0">
+                <Button type="submit" className="w-full" ref={ChangePassRef}>
+                  Change Password
                 </Button>
               </div>
+              {resMessage && (
+                <p
+                  className={`px-6 py-3 ${
+                    response.success ? "text-green-500" : "text-red-500"
+                  }`}
+                >
+                  {response.message}
+                </p>
+              )}
             </form>
           </div>
           <div className="mt-4 text-center text-sm text-muted-foreground">

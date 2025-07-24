@@ -1272,7 +1272,7 @@ const Dashboard = () => {
                                 }
                                 className="w-10 h-10 rounded-full"
                               />
-                              {OnlineUsers.includes(chat.participants[1]) && (
+                              {OnlineUsers.includes(getReceiverId()) && (
                                 <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                               )}
                             </div>
@@ -1338,9 +1338,7 @@ const Dashboard = () => {
                                   : selectedChat.receiverName}
                               </h4>
                               <p className="text-xs sm:text-sm text-gray-500">
-                                {OnlineUsers.includes(
-                                  selectedChat.participants[1]
-                                )
+                                {OnlineUsers.includes(getReceiverId())
                                   ? "Online"
                                   : "Offline"}
                               </p>

@@ -50,7 +50,11 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    e.target.disabled = true;
+    e.target.textContent = "Signing In...";
     await validateUser(formData.email, formData.password);
+    e.target.disabled = false;
+    e.target.textContent = "Sign In";
   };
 
   return (
@@ -165,8 +169,6 @@ const LoginPage = () => {
                   type="submit"
                   className="w-full"
                   onClick={(e) => {
-                    e.target.disabled = true;
-                    e.target.textContent = "Signing In...";
                     handleSubmit(e);
                   }}
                 >
