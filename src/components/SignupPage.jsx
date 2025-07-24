@@ -117,18 +117,21 @@ const SignupPage = () => {
 
   const postData = async (firstName, lastName, email, password) => {
     try {
-      const response = await fetch("http://localhost:3000/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", // Tells server we're sending JSON
-        },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          password,
-        }),
-      });
+      const response = await fetch(
+        "https://safe-journey-backend.vercel.app/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // Tells server we're sending JSON
+          },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            email,
+            password,
+          }),
+        }
+      );
 
       const data = await response.json(); // Convert response to JSON
       console.log("Success:", data);
@@ -157,15 +160,18 @@ const SignupPage = () => {
 
   const postVCode = async (email) => {
     try {
-      const response = await fetch("http://localhost:3000/verification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", // Tells server we're sending JSON
-        },
-        body: JSON.stringify({
-          email,
-        }),
-      });
+      const response = await fetch(
+        "https://safe-journey-backend.vercel.app/verification",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // Tells server we're sending JSON
+          },
+          body: JSON.stringify({
+            email,
+          }),
+        }
+      );
 
       const data = await response.json(); // Convert response to JSON
       console.log("Success:", data);
@@ -177,7 +183,7 @@ const SignupPage = () => {
   const postContacts = async (email, contacts) => {
     try {
       const response = await fetch(
-        "http://localhost:3000/verification/postContacts",
+        "https://safe-journey-backend.vercel.app/verification/postContacts",
         {
           method: "POST",
           headers: {
@@ -200,7 +206,7 @@ const SignupPage = () => {
   const postRoutes = async (email, routes) => {
     try {
       const response = await fetch(
-        "http://localhost:3000/verification/postRoutes",
+        "https://safe-journey-backend.vercel.app/verification/postRoutes",
         {
           method: "POST",
           headers: {
@@ -228,7 +234,7 @@ const SignupPage = () => {
       if (back) formData.append("back", back);
 
       const response = await fetch(
-        "http://localhost:3000/verification/postID",
+        "https://safe-journey-backend.vercel.app/verification/postID",
         {
           method: "POST",
           body: formData,
@@ -269,7 +275,7 @@ const SignupPage = () => {
   const verifyCode = async (code) => {
     try {
       const response = await fetch(
-        "http://localhost:3000/verification/verfiyCode",
+        "https://safe-journey-backend.vercel.app/verification/verfiyCode",
         {
           method: "POST",
           headers: {

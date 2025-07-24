@@ -21,7 +21,7 @@ const ForgotPasswordPage = () => {
   const verifyCode = async (code) => {
     try {
       const response = await fetch(
-        "http://localhost:3000/verification/verfiyCode",
+        "https://safe-journey-backend.vercel.app/verification/verfiyCode",
         {
           method: "POST",
           headers: {
@@ -47,15 +47,18 @@ const ForgotPasswordPage = () => {
 
   const postVCode = async (email) => {
     try {
-      const response = await fetch("http://localhost:3000/verification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", // Tells server we're sending JSON
-        },
-        body: JSON.stringify({
-          email,
-        }),
-      });
+      const response = await fetch(
+        "https://safe-journey-backend.vercel.app/verification",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // Tells server we're sending JSON
+          },
+          body: JSON.stringify({
+            email,
+          }),
+        }
+      );
 
       const data = await response.json(); // Convert response to JSON
       console.log("Success:", data);
@@ -66,16 +69,19 @@ const ForgotPasswordPage = () => {
 
   const ChangePass = async (email, newPassword) => {
     try {
-      const res = await fetch("http://localhost:3000/login/changePassword", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          newPassword,
-        }),
-      });
+      const res = await fetch(
+        "https://safe-journey-backend.vercel.app/login/changePassword",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            newPassword,
+          }),
+        }
+      );
 
       const data = await res.json();
       console.log("Success:", data);

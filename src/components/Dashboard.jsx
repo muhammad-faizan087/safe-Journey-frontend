@@ -77,7 +77,7 @@ const Dashboard = () => {
   const getConversations = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/message/getConversations",
+        "https://safe-journey-backend.vercel.app/message/getConversations",
         {
           method: "GET",
           credentials: "include",
@@ -103,7 +103,7 @@ const Dashboard = () => {
 
   const getUserData = async () => {
     try {
-      const response = await fetch("http://localhost:3000/dashboard", {
+      const response = await fetch("https://safe-journey-backend.vercel.app/dashboard", {
         credentials: "include",
       });
 
@@ -134,7 +134,7 @@ const Dashboard = () => {
   // ) => {
   //   try {
   //     const response = await fetch(
-  //       "http://localhost:3000/journeys/create-journey",
+  //       "https://safe-journey-backend.vercel.app/journeys/create-journey",
   //       {
   //         method: "POST",
   //         headers: {
@@ -175,7 +175,7 @@ const Dashboard = () => {
   // ) => {
   //   try {
   //     const response = await fetch(
-  //       "http://localhost:3000/journeys/getCompanions",
+  //       "https://safe-journey-backend.vercel.app/journeys/getCompanions",
   //       {
   //         method: "POST",
   //         headers: {
@@ -211,7 +211,7 @@ const Dashboard = () => {
   ) => {
     try {
       const response = await fetch(
-        "http://localhost:3000/journeys/deleteMatchedJourney",
+        "https://safe-journey-backend.vercel.app/journeys/deleteMatchedJourney",
         {
           method: "DELETE",
           headers: {
@@ -263,7 +263,7 @@ const Dashboard = () => {
   ) => {
     try {
       const res = await fetch(
-        "http://localhost:3000/journeys/createJourneyAndGetCompanions",
+        "https://safe-journey-backend.vercel.app/journeys/createJourneyAndGetCompanions",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -315,7 +315,7 @@ const Dashboard = () => {
     if (!selectedChat) return;
     try {
       const response = await fetch(
-        "http://localhost:3000/message/sendMessage/",
+        "https://safe-journey-backend.vercel.app/message/sendMessage/",
         {
           method: "POST",
           headers: {
@@ -397,7 +397,7 @@ const Dashboard = () => {
   const sendNotification = async (receiverId, message, time) => {
     try {
       const res = await fetch(
-        "http://localhost:3000/notify/sendNotification/",
+        "https://safe-journey-backend.vercel.app/notify/sendNotification/",
         {
           method: "POST",
           headers: {
@@ -530,7 +530,7 @@ const Dashboard = () => {
   ) => {
     try {
       const response = await fetch(
-        "http://localhost:3000/message/createConversation",
+        "https://safe-journey-backend.vercel.app/message/createConversation",
         {
           method: "POST",
           headers: {
@@ -615,7 +615,7 @@ const Dashboard = () => {
 
   const Notify = async (email) => {
     try {
-      const response = await fetch("http://localhost:3000/notify", {
+      const response = await fetch("https://safe-journey-backend.vercel.app/notify", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
