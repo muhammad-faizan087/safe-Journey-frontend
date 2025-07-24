@@ -29,7 +29,7 @@ import Button from "./Button";
 import { useSocketContext } from "../Context/SocketContext.jsx";
 import sound from "../assets/notification.mp3";
 import { format } from "date-fns";
-import AutoPlaceInput from "./api try.jsx";
+import AutoPlaceInput from "./Api try.jsx";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("search");
