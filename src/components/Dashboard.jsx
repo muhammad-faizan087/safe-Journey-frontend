@@ -84,7 +84,7 @@ const Dashboard = () => {
         }
       );
       const data = await response.json();
-      if (data.conversations && data.conversations.length >= 0) {
+      if (data && data.conversations && data.conversations.length >= 0) {
         setchats(data.conversations);
         // setmessages(data.conversations.map((chat) => chat.messages));
       }
@@ -270,6 +270,7 @@ const Dashboard = () => {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
           body: JSON.stringify({
             email,
             fromAddress: from,
@@ -721,7 +722,7 @@ const Dashboard = () => {
                 >
                   <Bell className="h-5 w-5 sm:h-6 sm:w-6" />
                   <span className="absolute -top-1 -right-1 h-3 w-3 sm:h-4 sm:w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                    {NotificationsArray.length}
+                    {NotificationsArray.length || 0}
                   </span>
                 </button>
 
@@ -731,7 +732,8 @@ const Dashboard = () => {
                       <h3 className="font-semibold">Notifications</h3>
                     </div>
                     <div className="max-h-64 overflow-y-auto">
-                      {NotificationsArray.length > 0 ? (
+                      {NotificationsArray.length &&
+                      NotificationsArray.length > 0 ? (
                         NotificationsArray.map((notification, index) => {
                           return (
                             <div
@@ -1132,7 +1134,7 @@ const Dashboard = () => {
                     Available Travel Companions
                   </h3>
                   <div className="space-y-4">
-                    {Companions || Companions.length > 0 ? (
+                    {Companions && Companions.length > 0 ? (
                       Companions.map((companion, index) =>
                         companion.user ? (
                           <motion.div
