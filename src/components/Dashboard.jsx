@@ -84,7 +84,7 @@ const Dashboard = () => {
         }
       );
       const data = await response.json();
-      if (data.conversations.length >= 0) {
+      if (data.conversations && data.conversations.length >= 0) {
         setchats(data.conversations);
         // setmessages(data.conversations.map((chat) => chat.messages));
       }
