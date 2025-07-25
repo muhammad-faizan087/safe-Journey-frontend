@@ -25,12 +25,15 @@ export const SocketProvider = ({ children }) => {
     const token = getTokenFromCookie();
     if (!token) return;
 
-    const socketInstance = io("http://localhost:3000", {
-      withCredentials: true,
-      auth: {
-        token,
-      },
-    });
+    const socketInstance = io(
+      "https://safejourney-backend-production.up.railway.app",
+      {
+        withCredentials: true,
+        auth: {
+          token,
+        },
+      }
+    );
 
     setSocket(socketInstance);
 

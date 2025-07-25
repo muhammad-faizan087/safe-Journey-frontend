@@ -21,7 +21,7 @@ const ForgotPasswordPage = () => {
   const verifyCode = async (code) => {
     try {
       const response = await fetch(
-        "https://safe-journey-backend.vercel.app/verification/verfiyCode",
+        "https://safejourney-backend-production.up.railway.app/verification/verfiyCode",
         {
           method: "POST",
           headers: {
@@ -48,7 +48,7 @@ const ForgotPasswordPage = () => {
   const postVCode = async (email) => {
     try {
       const response = await fetch(
-        "https://safe-journey-backend.vercel.app/verification",
+        "https://safejourney-backend-production.up.railway.app/verification",
         {
           method: "POST",
           headers: {
@@ -70,7 +70,7 @@ const ForgotPasswordPage = () => {
   const ChangePass = async (email, newPassword) => {
     try {
       const res = await fetch(
-        "https://safe-journey-backend.vercel.app/login/changePassword",
+        "https://safejourney-backend-production.up.railway.app/login/changePassword",
         {
           method: "POST",
           headers: {

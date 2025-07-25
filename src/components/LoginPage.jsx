@@ -24,7 +24,7 @@ const LoginPage = () => {
   const validateUser = async (email, password) => {
     try {
       const response = await fetch(
-        "https://safe-journey-backend.vercel.app/login",
+        "https://safejourney-backend-production.up.railway.app/login",
         {
           method: "POST",
           headers: {

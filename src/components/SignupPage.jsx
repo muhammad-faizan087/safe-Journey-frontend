@@ -118,7 +118,7 @@ const SignupPage = () => {
   const postData = async (firstName, lastName, email, password) => {
     try {
       const response = await fetch(
-        "https://safe-journey-backend.vercel.app/signup",
+        "https://safejourney-backend-production.up.railway.app/signup",
         {
           method: "POST",
           headers: {
@@ -161,7 +161,7 @@ const SignupPage = () => {
   const postVCode = async (email) => {
     try {
       const response = await fetch(
-        "https://safe-journey-backend.vercel.app/verification",
+        "https://safejourney-backend-production.up.railway.app/verification",
         {
           method: "POST",
           headers: {
@@ -183,7 +183,7 @@ const SignupPage = () => {
   const postContacts = async (email, contacts) => {
     try {
       const response = await fetch(
-        "https://safe-journey-backend.vercel.app/verification/postContacts",
+        "https://safejourney-backend-production.up.railway.app/verification/postContacts",
         {
           method: "POST",
           headers: {
@@ -206,7 +206,7 @@ const SignupPage = () => {
   const postRoutes = async (email, routes) => {
     try {
       const response = await fetch(
-        "https://safe-journey-backend.vercel.app/verification/postRoutes",
+        "https://safejourney-backend-production.up.railway.app/verification/postRoutes",
         {
           method: "POST",
           headers: {
@@ -234,7 +234,7 @@ const SignupPage = () => {
       if (back) formData.append("back", back);
 
       const response = await fetch(
-        "https://safe-journey-backend.vercel.app/verification/postID",
+        "https://safejourney-backend-production.up.railway.app/verification/postID",
         {
           method: "POST",
           body: formData,
@@ -275,7 +275,7 @@ const SignupPage = () => {
   const verifyCode = async (code) => {
     try {
       const response = await fetch(
-        "https://safe-journey-backend.vercel.app/verification/verfiyCode",
+        "https://safejourney-backend-production.up.railway.app/verification/verfiyCode",
         {
           method: "POST",
           headers: {

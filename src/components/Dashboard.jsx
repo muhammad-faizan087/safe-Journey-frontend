@@ -77,7 +77,7 @@ const Dashboard = () => {
   const getConversations = async () => {
     try {
       const response = await fetch(
-        "https://safe-journey-backend.vercel.app/message/getConversations",
+        "https://safejourney-backend-production.up.railway.app/message/getConversations",
         {
           method: "GET",
           credentials: "include",
@@ -103,9 +103,12 @@ const Dashboard = () => {
 
   const getUserData = async () => {
     try {
-      const response = await fetch("https://safe-journey-backend.vercel.app/dashboard", {
-        credentials: "include",
-      });
+      const response = await fetch(
+        "https://safejourney-backend-production.up.railway.app/dashboard",
+        {
+          credentials: "include",
+        }
+      );
 
       const data = await response.json();
       // console.log(data);
@@ -134,7 +137,7 @@ const Dashboard = () => {
   // ) => {
   //   try {
   //     const response = await fetch(
-  //       "https://safe-journey-backend.vercel.app/journeys/create-journey",
+  //       "https://safejourney-backend-production.up.railway.app/journeys/create-journey",
   //       {
   //         method: "POST",
   //         headers: {
@@ -175,7 +178,7 @@ const Dashboard = () => {
   // ) => {
   //   try {
   //     const response = await fetch(
-  //       "https://safe-journey-backend.vercel.app/journeys/getCompanions",
+  //       "https://safejourney-backend-production.up.railway.app/journeys/getCompanions",
   //       {
   //         method: "POST",
   //         headers: {
@@ -211,7 +214,7 @@ const Dashboard = () => {
   ) => {
     try {
       const response = await fetch(
-        "https://safe-journey-backend.vercel.app/journeys/deleteMatchedJourney",
+        "https://safejourney-backend-production.up.railway.app/journeys/deleteMatchedJourney",
         {
           method: "DELETE",
           headers: {
@@ -263,7 +266,7 @@ const Dashboard = () => {
   ) => {
     try {
       const res = await fetch(
-        "https://safe-journey-backend.vercel.app/journeys/createJourneyAndGetCompanions",
+        "https://safejourney-backend-production.up.railway.app/journeys/createJourneyAndGetCompanions",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -315,7 +318,7 @@ const Dashboard = () => {
     if (!selectedChat) return;
     try {
       const response = await fetch(
-        "https://safe-journey-backend.vercel.app/message/sendMessage/",
+        "https://safejourney-backend-production.up.railway.app/message/sendMessage/",
         {
           method: "POST",
           headers: {
@@ -397,7 +400,7 @@ const Dashboard = () => {
   const sendNotification = async (receiverId, message, time) => {
     try {
       const res = await fetch(
-        "https://safe-journey-backend.vercel.app/notify/sendNotification/",
+        "https://safejourney-backend-production.up.railway.app/notify/sendNotification/",
         {
           method: "POST",
           headers: {
@@ -530,7 +533,7 @@ const Dashboard = () => {
   ) => {
     try {
       const response = await fetch(
-        "https://safe-journey-backend.vercel.app/message/createConversation",
+        "https://safejourney-backend-production.up.railway.app/message/createConversation",
         {
           method: "POST",
           headers: {
@@ -615,16 +618,19 @@ const Dashboard = () => {
 
   const Notify = async (email) => {
     try {
-      const response = await fetch("https://safe-journey-backend.vercel.app/notify", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          email,
-        }),
-      });
+      const response = await fetch(
+        "https://safejourney-backend-production.up.railway.app/notify",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            email,
+          }),
+        }
+      );
       const data = await response.json();
       console.log(data);
     } catch (error) {
