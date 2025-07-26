@@ -24,7 +24,6 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     // const token = getTokenFromCookie();
     const token = localStorage.getItem("token");
-
     console.log("Token from cookie:", token);
     console.log(
       "Connecting socket to:",
