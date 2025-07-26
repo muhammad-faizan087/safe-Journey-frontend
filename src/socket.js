@@ -1,5 +1,8 @@
 import { io } from "socket.io-client";
 
-export const socket_ = io("http://localhost:3000", {
-  withCredentials: true,
-});
+export const socket_ = io(
+  "https://safejourney-backend-production.up.railway.app",
+  {
+    withCredentials: true,
+  }
+);
