@@ -426,7 +426,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    // if (!socket || isListenerAttached.current) return;
+    if (!socket || isListenerAttached.current) return;
     const handleNewMessage = async ({
       message,
       conversationId,
