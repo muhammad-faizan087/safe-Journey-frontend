@@ -17,6 +17,7 @@ const ForgotPasswordPage = () => {
   const VerifyRef = useRef();
   const VerificationCodeRef = useRef();
   const ChangePassRef = useRef();
+  const token = localStorage.getItem("token");
 
   const verifyCode = async (code) => {
     try {

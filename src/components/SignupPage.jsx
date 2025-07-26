@@ -40,6 +40,8 @@ const SignupPage = () => {
     ],
   });
 
+  const token = localStorage.getItem("token");
+
   const handleChange = (e, index = null, arrayName = null) => {
     const { name, value, type, files } = e.target;
 

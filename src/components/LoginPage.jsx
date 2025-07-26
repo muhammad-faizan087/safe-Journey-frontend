@@ -6,6 +6,7 @@ import { motion } from "motion/react";
 const LoginPage = () => {
   const [NotAllowed, setNotAllowed] = useState(false);
   const [NotAllowedMessage, setNotAllowedMessage] = useState("");
+  const token = localStorage.getItem("token");
 
   const [formData, setFormData] = useState({
     email: "",
