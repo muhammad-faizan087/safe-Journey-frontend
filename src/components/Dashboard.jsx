@@ -85,6 +85,10 @@ const Dashboard = () => {
         {
           method: "GET",
           credentials: "include",
+          headers: {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  },
         }
       );
       const data = await response.json();
@@ -111,6 +115,10 @@ const Dashboard = () => {
         "https://safejourney-backend-production.up.railway.app/dashboard",
         {
           credentials: "include",
+          headers: {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  },
         }
       );
 
