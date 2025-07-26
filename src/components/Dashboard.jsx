@@ -58,6 +58,8 @@ const Dashboard = () => {
   const matchedRef = useRef(false);
   const MessageButtonRef = useRef();
 
+  const token = localStorage.getItem("token");
+
   const now = new Date();
   const Currentdate = format(now, "yyyy-MM-dd");
   const Currenttime = format(now, "HH:mm");
@@ -220,6 +222,7 @@ const Dashboard = () => {
         {
           method: "DELETE",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           credentials: "include",
@@ -271,7 +274,10 @@ const Dashboard = () => {
         "https://safejourney-backend-production.up.railway.app/journeys/createJourneyAndGetCompanions",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
           credentials: "include",
           body: JSON.stringify({
             email,
@@ -325,6 +331,7 @@ const Dashboard = () => {
         {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           credentials: "include",
@@ -407,6 +414,7 @@ const Dashboard = () => {
         {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           credentials: "include",
@@ -540,6 +548,7 @@ const Dashboard = () => {
         {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           credentials: "include",
@@ -626,6 +635,7 @@ const Dashboard = () => {
         {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           credentials: "include",

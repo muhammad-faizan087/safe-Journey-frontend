@@ -25,7 +25,8 @@ const ForgotPasswordPage = () => {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json", // Tells server we're sending JSON
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             code,
@@ -52,7 +53,8 @@ const ForgotPasswordPage = () => {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json", // Tells server we're sending JSON
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             email,
@@ -74,6 +76,7 @@ const ForgotPasswordPage = () => {
         {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({

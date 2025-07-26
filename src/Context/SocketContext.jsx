@@ -24,7 +24,7 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     // const token = getTokenFromCookie();
     const token = localStorage.getItem("token");
-    console.log("Token from cookie:", token);
+    console.log("Token:", token);
     console.log(
       "Connecting socket to:",
       "https://safejourney-backend-production.up.railway.app"

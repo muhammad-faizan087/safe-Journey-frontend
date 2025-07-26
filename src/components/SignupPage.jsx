@@ -122,7 +122,8 @@ const SignupPage = () => {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json", // Tells server we're sending JSON
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             firstName,
@@ -165,7 +166,8 @@ const SignupPage = () => {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json", // Tells server we're sending JSON
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             email,
@@ -187,6 +189,7 @@ const SignupPage = () => {
         {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -210,6 +213,7 @@ const SignupPage = () => {
         {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -279,7 +283,8 @@ const SignupPage = () => {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json", // Tells server we're sending JSON
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             code,
