@@ -23,11 +23,19 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     const token = getTokenFromCookie();
+    console.log("Token from cookie:", token);
+    console.log(
+      "Connecting socket to:",
+      "https://safejourney-backend-production.up.railway.app"
+    );
+
     if (!token) return;
 
     const socketInstance = io(
       "https://safejourney-backend-production.up.railway.app",
       {
+        transports: ["websocket"],
+        upgrade: true,
         withCredentials: true,
         auth: {
           token,
@@ -48,6 +56,10 @@ export const SocketProvider = ({ children }) => {
     socketInstance.on("getOnlineUsers", (users) => {
       setOnlineUsers(users);
       console.log("Updated online users:", users);
+    });
+
+    socketInstance.on("connect_error", (err) => {
+      console.error("❌ Socket connection error:", err.message);
     });
 
     return () => {
