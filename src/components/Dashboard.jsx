@@ -52,6 +52,8 @@ const Dashboard = () => {
   const [chats, setchats] = useState([]);
   const searchRef = useRef();
   const { socket, OnlineUsers } = useSocketContext();
+  const isListenerAttached = useRef(false);
+
   const messagesEndRef = useRef();
   const matchedRef = useRef(false);
   const MessageButtonRef = useRef();
@@ -424,8 +426,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (!socket) return;
-
+    if (!socket || isListenerAttached.current) return;
     const handleNewMessage = async ({
       message,
       conversationId,
@@ -518,9 +519,10 @@ const Dashboard = () => {
     };
 
     socket.on("newMessage", handleNewMessage);
-
+    isListenerAttached.current = true;
     return () => {
       socket.off("newMessage", handleNewMessage);
+      isListenerAttached.current = true;
     };
   }, [socket]);
 
