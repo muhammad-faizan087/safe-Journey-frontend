@@ -86,9 +86,9 @@ const Dashboard = () => {
           method: "GET",
           credentials: "include",
           headers: {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  },
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
       );
       const data = await response.json();
@@ -116,9 +116,9 @@ const Dashboard = () => {
         {
           credentials: "include",
           headers: {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  },
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
       );
 
@@ -667,7 +667,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen min-w-fit bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b sticky top-0 z-40">
         <div className="px-4 sm:px-6 lg:px-8">
@@ -932,10 +932,10 @@ const Dashboard = () => {
                     <span>Safety Rating</span>
                     <span className="font-medium text-green-600">4.9/5</span>
                   </div>
-                  <div className="flex justify-between">
+                  {/* <div className="flex justify-between">
                     <span>Active Connections</span>
                     <span className="font-medium">12</span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
@@ -1195,21 +1195,47 @@ const Dashboard = () => {
                                     Status : {companion.journey.status}
                                   </p>
                                   {/* <div className="flex items-center gap-1 mb-2">
-                                  <Star className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-400 fill-current" />
-                                  <span className="text-xs sm:text-sm">
-                                    {companion.rating}
-                                  </span>
-                                  <span className="text-xs sm:text-sm text-gray-500">
-                                    ({companion.reviews} reviews)
-                                  </span>
-                                </div> */}
+                                    <Star className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-400 fill-current" />
+                                    <span className="text-xs sm:text-sm">
+                                      {companion.rating}
+                                    </span>
+                                    <span className="text-xs sm:text-sm text-gray-500">
+                                      ({companion.reviews} reviews)
+                                    </span>
+                                  </div> */}
                                   <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-2 text-xs sm:text-sm text-gray-600">
-                                    <div className="flex items-center gap-1">
+                                    {/* <div className="flex items-center gap-1">
                                       <MapPin className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                                       <div className="truncate flex gap-1">
                                         {companion.journey.from.address}{" "}
                                         <ArrowRight />
                                         {companion.journey.to.address}
+                                      </div>
+                                    </div> */}
+                                    <div className="flex items-start gap-2">
+                                      <MapPin className="h-4 w-4 text-gray-500 flex-shrink-0 mt-0.5" />
+                                      <div className="min-w-0 flex-1">
+                                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                          <div className="flex items-center gap-2 min-w-0">
+                                            <span
+                                              className="text-xs sm:text-sm text-gray-700 truncate max-w-[120px] sm:max-w-[150px] md:max-w-[200px]"
+                                              title={
+                                                companion.journey.from.address
+                                              }
+                                            >
+                                              {companion.journey.from.address}
+                                            </span>
+                                            <ArrowRight className="h-3 w-3 text-gray-400 flex-shrink-0" />
+                                            <span
+                                              className="text-xs sm:text-sm text-gray-700 truncate max-w-[120px] sm:max-w-[150px] md:max-w-[200px]"
+                                              title={
+                                                companion.journey.to.address
+                                              }
+                                            >
+                                              {companion.journey.to.address}
+                                            </span>
+                                          </div>
+                                        </div>
                                       </div>
                                     </div>
                                     <div className="flex items-center gap-1">
@@ -1223,10 +1249,10 @@ const Dashboard = () => {
                                     <span className="text-green-600">
                                       Safety Score: {companion.safetyScore}%
                                     </span>
-                                    <span className="text-blue-600">
+                                    {/* <span className="text-blue-600">
                                       {companion.mutualConnections} mutual
                                       connections
-                                    </span>
+                                    </span> */}
                                   </div>
                                 </div>
                               </div>
@@ -1244,7 +1270,7 @@ const Dashboard = () => {
                                     Message
                                   </span>
                                 </Button>
-                                <Button
+                                {/* <Button
                                   size="sm"
                                   className="flex-1 sm:flex-none"
                                 >
@@ -1252,7 +1278,7 @@ const Dashboard = () => {
                                   <span className="hidden sm:inline">
                                     Connect
                                   </span>
-                                </Button>
+                                </Button> */}
                               </div>
                             </div>
                           </motion.div>

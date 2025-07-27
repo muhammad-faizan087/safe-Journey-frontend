@@ -12,6 +12,9 @@ const SignupPage = () => {
   const ResendCodeRef = useRef();
   const EmergencyContactsRef = useRef();
   const UserEmail = useRef("");
+  const step1ContinueRef = useRef();
+  const step2ContinueRef = useRef();
+  const step3ContinueRef = useRef();
   const [Verified, setVerified] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -147,6 +150,8 @@ const SignupPage = () => {
 
   const handleStep1 = async (e) => {
     e.preventDefault();
+    step1ContinueRef.current.disabled = true;
+    step1ContinueRef.current.textContent = "...";
     const response = await postData(
       formData.firstName,
       formData.lastName,
@@ -159,6 +164,8 @@ const SignupPage = () => {
       setExists(true);
       setMessage(response.message);
     }
+    step1ContinueRef.current.disabled = false;
+    step1ContinueRef.current.textContent = "Continue";
   };
 
   const postVCode = async (email) => {
@@ -253,26 +260,37 @@ const SignupPage = () => {
 
       const data = await response.json();
       console.log("Success:", data);
+      return data;
     } catch (error) {
       console.error("Error uploading Student ID:", error);
+      return error;
     }
   };
 
   const handleStep2 = async (e) => {
     e.preventDefault();
+    step2ContinueRef.current.disabled = true;
+    step2ContinueRef.current.textContent = "...";
     UserEmail.current =
       VerificationCodeRef.current.previousElementSibling.value;
-    await postID(
+    const res = await postID(
       VerificationCodeRef.current.previousElementSibling.value,
       formData.idFront,
       formData.idBack
     );
-    nextStep();
+    if (res) {
+      if (res.success) {
+        nextStep();
+      }
+    }
+    step2ContinueRef.current.disabled = false;
+    step2ContinueRef.current.textContent = "Continue";
   };
 
   const handleStep3 = async (e) => {
     e.preventDefault();
-
+    step3ContinueRef.current.disabled = true;
+    step3ContinueRef.current.textContent = "...";
     try {
       await postContacts(UserEmail.current, formData.emergencyContact);
       await postRoutes(UserEmail.current, formData.route);
@@ -280,6 +298,8 @@ const SignupPage = () => {
     } catch (err) {
       console.error("Error submitting data:", err);
     }
+    step3ContinueRef.current.disabled = false;
+    step3ContinueRef.current.textContent = "Complete Setup";
   };
 
   const verifyCode = async (code) => {
@@ -556,6 +576,7 @@ const SignupPage = () => {
                         disabled={
                           formData.password !== formData.confirmPassword
                         }
+                        ref={step1ContinueRef}
                       >
                         Continue
                         <ArrowRight className="h-4 w-4" />
@@ -761,6 +782,7 @@ const SignupPage = () => {
                       type="submit"
                       className="gap-1 cursor-pointer"
                       disabled={!Verified}
+                      ref={step2ContinueRef}
                     >
                       Continue
                       <ArrowRight className="h-4 w-4" />
@@ -1002,7 +1024,11 @@ const SignupPage = () => {
                     </div>
                   </div>
                   <div className="flex items-center p-6 pt-0 justify-end">
-                    <Button type="submit" className="gap-1 cursor-pointer">
+                    <Button
+                      type="submit"
+                      className="gap-1 cursor-pointer"
+                      ref={step3ContinueRef}
+                    >
                       Complete Setup
                       <ArrowRight className="h-4 w-4" />
                     </Button>
