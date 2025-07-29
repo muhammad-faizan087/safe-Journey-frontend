@@ -95,7 +95,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     getFeedbacks();
-  }, [feedbackList]);
+  }, []);
 
   // const feedbackList = [
   //   {
@@ -533,7 +533,7 @@ const Dashboard = () => {
   };
 
   const getReceiverId = () => {
-    if (!selectedChat || !UserData) return null;
+    // if (!selectedChat || !UserData) return null;
     return selectedChat.participants.find((id) => id !== UserData.id);
   };
 
@@ -1147,7 +1147,7 @@ const Dashboard = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 lg:ml-0 min-h-screen">
+        <div className="flex-1 lg:ml-0 min-h-screen min-w-screen sm:min-w-0">
           <div className="p-4 sm:p-6">
             {/* Search Tab */}
             {activeTab === "search" && (
@@ -1157,101 +1157,6 @@ const Dashboard = () => {
                   <h2 className="text-lg sm:text-xl font-semibold mb-4">
                     Find Travel Companions
                   </h2>
-                  {/* <motion.form
-                    onSubmit={handleSearch}
-                    className="space-y-4"
-                    initial={{ opacity: 0, translateY: "-20%" }}
-                    whileInView={{
-                      opacity: 1,
-                      translateY: "0",
-                      transition: {
-                        duration: 0.6,
-                        ease: "easeOut",
-                      },
-                    }}
-                    viewport={{ once: true }}
-                  >
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium mb-2">
-                          From
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="Enter origin location"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent text-sm sm:text-base"
-                          value={searchData.origin}
-                          required={true}
-                          onChange={(e) =>
-                            setSearchData({
-                              ...searchData,
-                              origin: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">
-                          To
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="Enter destination"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent text-sm sm:text-base"
-                          value={searchData.destination}
-                          required={true}
-                          onChange={(e) =>
-                            setSearchData({
-                              ...searchData,
-                              destination: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">
-                          Date
-                        </label>
-                        <input
-                          type="date"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent text-sm sm:text-base"
-                          value={searchData.date}
-                          required={true}
-                          onChange={(e) =>
-                            setSearchData({
-                              ...searchData,
-                              date: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">
-                          Preferred Time
-                        </label>
-                        <input
-                          type="time"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent text-sm sm:text-base"
-                          value={searchData.time}
-                          required={true}
-                          onChange={(e) =>
-                            setSearchData({
-                              ...searchData,
-                              time: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                    </div>
-                    <Button
-                      type="submit"
-                      className="w-full sm:w-auto"
-                      ref={searchRef}
-                    >
-                      <Search className="h-4 w-4 mr-2" />
-                      Search Companions
-                    </Button>
-                  </motion.form> */}
                   <motion.form
                     onSubmit={handleSearch}
                     className="space-y-4"
@@ -1356,7 +1261,7 @@ const Dashboard = () => {
                             }}
                             viewport={{ once: true }}
                           >
-                            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                               <div className="flex items-start gap-3 sm:gap-4">
                                 <img
                                   src="/profile.svg"
@@ -1388,7 +1293,7 @@ const Dashboard = () => {
                                       ({companion.reviews} reviews)
                                     </span>
                                   </div> */}
-                                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-2 text-xs sm:text-sm text-gray-600">
+                                  <div className="flex flex-col sm:left-0 sm:flex-row sm:items-center gap-1 sm:gap-2 mb-2 text-xs sm:text-sm text-gray-600">
                                     {/* <div className="flex items-center gap-1">
                                       <MapPin className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
                                       <div className="truncate flex gap-1">
@@ -1430,11 +1335,20 @@ const Dashboard = () => {
                                       </span>
                                     </div>
                                   </div>
-                                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm">
+                                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:left-0 sm:gap-4 text-xs sm:text-sm">
                                     <span className="text-green-600">
-                                      Gender:
-                                      {companion.gender ? companion.gender : ""}
-                                      %
+                                      Gender:{" "}
+                                      <span
+                                        className={
+                                          companion.user.gender === "MALE"
+                                            ? "text-blue-500"
+                                            : "text-rose-500"
+                                        }
+                                      >
+                                        {companion.user.gender
+                                          ? companion.user.gender
+                                          : ""}
+                                      </span>
                                     </span>
                                     {/* <span className="text-blue-600">
                                       {companion.mutualConnections} mutual
