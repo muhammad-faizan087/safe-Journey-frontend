@@ -19,6 +19,7 @@ const SignupPage = () => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
+    gender: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -120,7 +121,7 @@ const SignupPage = () => {
     window.scrollTo(0, 0);
   };
 
-  const postData = async (firstName, lastName, email, password) => {
+  const postData = async (firstName, lastName, email, password, gender) => {
     try {
       const response = await fetch(
         "https://safejourney-backend-production.up.railway.app/signup",
@@ -135,6 +136,7 @@ const SignupPage = () => {
             lastName,
             email,
             password,
+            gender,
           }),
         }
       );
@@ -156,7 +158,8 @@ const SignupPage = () => {
       formData.firstName,
       formData.lastName,
       formData.email,
-      formData.password
+      formData.password,
+      formData.gender
     );
     if (response.success) {
       nextStep();
@@ -494,6 +497,28 @@ const SignupPage = () => {
                           required
                         />
                       </div>
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="gender"
+                          className="text-sm font-medium leading-none"
+                        >
+                          Gender
+                        </label>
+                        <select
+                          id="gender"
+                          name="gender"
+                          value={formData.gender}
+                          onChange={handleChange}
+                          required
+                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          <option value="" disabled>
+                            Select your Gender
+                          </option>
+                          <option value="MALE">MALE</option>
+                          <option value="FEMALE">FEMALE</option>
+                        </select>
+                      </div>
                     </div>
 
                     <div className="space-y-2">
@@ -629,7 +654,7 @@ const SignupPage = () => {
                             </p>
                           </div>
                           <div className="space-y-2">
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 flex-col sm:flex-row">
                               <input
                                 type="email"
                                 placeholder="your.name@university.edu"
@@ -654,7 +679,7 @@ const SignupPage = () => {
                                 Send Code
                               </Button>
                             </div>
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 flex-col sm:flex-row">
                               <input
                                 id="verification-code"
                                 name="verificationCode"
@@ -700,8 +725,11 @@ const SignupPage = () => {
                       </div>
 
                       <div className="flex items-start gap-4 rounded-lg border p-4">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted">
+                        {/* <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted">
                           <span className="text-sm font-medium">2</span>
+                        </div> */}
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-100">
+                          <CheckCircle className="h-5 w-5 text-rose-500" />
                         </div>
                         <div className="space-y-2">
                           <h3 className="font-medium">
