@@ -533,7 +533,7 @@ const Dashboard = () => {
   };
 
   const getReceiverId = () => {
-    // if (!selectedChat || !UserData) return null;
+    if (!selectedChat || !UserData) return null;
     return selectedChat.participants.find((id) => id !== UserData.id);
   };
 
@@ -926,7 +926,7 @@ const Dashboard = () => {
                       <h3 className="font-semibold">Notifications</h3>
                     </div>
                     <div className="max-h-64 overflow-y-auto">
-                      {NotificationsArray.length &&
+                      {Array.isArray(NotificationsArray) &&
                       NotificationsArray.length > 0 ? (
                         NotificationsArray.map((notification, index) => {
                           return (
@@ -1125,7 +1125,7 @@ const Dashboard = () => {
               </div>
 
               {/* Mobile Active Status */}
-              <div className="sm:hidden mt-6 p-4 bg-gray-50 rounded-lg">
+              {/* <div className="sm:hidden mt-6 p-4 bg-gray-50 rounded-lg">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">I need to travel</span>
                   <button
@@ -1141,7 +1141,7 @@ const Dashboard = () => {
                     />
                   </button>
                 </div>
-              </div>
+              </div> */}
             </motion.div>
           </div>
         </div>
@@ -1244,7 +1244,7 @@ const Dashboard = () => {
                     Available Travel Companions
                   </h3>
                   <div className="space-y-4">
-                    {Companions && Companions.length > 0 ? (
+                    {Array.isArray(Companions) && Companions.length > 0 ? (
                       Companions.map((companion, index) =>
                         companion.user ? (
                           <motion.div
@@ -1407,54 +1407,64 @@ const Dashboard = () => {
                       <h3 className="font-semibold">Messages</h3>
                     </div>
                     <div className="overflow-y-auto h-full">
-                      {chats.map((chat) => (
-                        <div
-                          key={chat._id}
-                          onClick={() => handleChatSelect(chat)}
-                          className={`p-4 border-b cursor-pointer hover:bg-gray-50 ${
-                            selectedChat?._id === chat._id ? "bg-rose-50" : ""
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="relative">
-                              <img
-                                src="/profile.svg"
-                                alt={
-                                  chat.receiverName ===
-                                  UserData.firstName + " " + UserData.lastName
-                                    ? chat.senderName
-                                    : chat.receiverName
-                                }
-                                className="w-10 h-10 rounded-full"
-                              />
-                              {OnlineUsers.includes(getReceiverId()) && (
-                                <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center justify-between">
-                                <h4 className="font-medium truncate text-sm sm:text-base">
-                                  {chat.receiverName ===
-                                  UserData.firstName + " " + UserData.lastName
-                                    ? chat.senderName
-                                    : chat.receiverName}
-                                </h4>
-                                <span className="text-xs text-gray-500">
-                                  {chat.time ? chat.time : "Just now"}
-                                </span>
-                              </div>
-                              <p className="text-xs sm:text-sm text-gray-600 truncate">
-                                {chat.lastMessage}
-                              </p>
-                            </div>
-                            {/* {chat.unread > 0 && (
+                      {Array.isArray(chats) && chats.length > 0
+                        ? chats.map((chat) => (
+                            <div
+                              key={chat._id}
+                              onClick={() => handleChatSelect(chat)}
+                              className={`p-4 border-b cursor-pointer hover:bg-gray-50 ${
+                                selectedChat?._id === chat._id
+                                  ? "bg-rose-50"
+                                  : ""
+                              }`}
+                            >
+                              {console.log(chat)}
+                              <div className="flex items-center gap-3">
+                                <div className="relative">
+                                  <img
+                                    src="/profile.svg"
+                                    alt={
+                                      chat.receiverName ===
+                                      UserData.firstName +
+                                        " " +
+                                        UserData.lastName
+                                        ? chat.senderName
+                                        : chat.receiverName
+                                    }
+                                    className="w-10 h-10 rounded-full"
+                                  />
+                                  {OnlineUsers.includes(getReceiverId()) && (
+                                    <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                                  )}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center justify-between">
+                                    <h4 className="font-medium truncate text-sm sm:text-base">
+                                      {chat.receiverName ===
+                                      UserData.firstName +
+                                        " " +
+                                        UserData.lastName
+                                        ? chat.senderName
+                                        : chat.receiverName}
+                                    </h4>
+                                    <span className="text-xs text-gray-500">
+                                      {chat.time ? chat.time : "Just now"}
+                                    </span>
+                                  </div>
+                                  <p className="text-xs sm:text-sm text-gray-600 truncate">
+                                    {chat.lastMessage}
+                                  </p>
+                                </div>
+                                {/* {chat.unread > 0 && (
                               <div className="w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                                 {chat.unread}
                               </div>
                             )} */}
-                          </div>
-                        </div>
-                      ))}
+                              </div>
+                            </div>
+                          ))
+                        : ""}
+                      ;
                     </div>
                   </div>
 
@@ -1516,7 +1526,7 @@ const Dashboard = () => {
                           ref={messagesEndRef}
                           style={{ scrollBehavior: "smooth" }}
                         >
-                          {selectedChat.messages
+                          {selectedChat?.messages?.length > 0
                             ? selectedChat.messages.map((msg) => (
                                 <div
                                   key={msg._id}
@@ -1603,43 +1613,45 @@ const Dashboard = () => {
                   </Button> */}
                 </div>
                 <div className="space-y-4">
-                  {UserData.routes.map((route, index) => {
-                    return (
-                      <div className="border rounded-lg p-4" key={index}>
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                          <div>
-                            <h3 className="font-medium text-sm sm:text-base">
-                              {route.name}
-                            </h3>
-                            <p className="text-xs sm:text-sm text-gray-600">
-                              {route.from} → {route.to}
-                            </p>
-                            <p className="text-xs sm:text-sm text-gray-500">
-                              Usually active: {route.frequency}
-                            </p>
-                          </div>
-                          <div className="flex gap-2">
-                            {/* <Button
+                  {UserData?.routes?.length > 0
+                    ? UserData.routes.map((route, index) => {
+                        return (
+                          <div className="border rounded-lg p-4" key={index}>
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                              <div>
+                                <h3 className="font-medium text-sm sm:text-base">
+                                  {route.name}
+                                </h3>
+                                <p className="text-xs sm:text-sm text-gray-600">
+                                  {route.from} → {route.to}
+                                </p>
+                                <p className="text-xs sm:text-sm text-gray-500">
+                                  Usually active: {route.frequency}
+                                </p>
+                              </div>
+                              <div className="flex gap-2">
+                                {/* <Button
                               variant="outline"
                               size="sm"
                               className="flex-1 sm:flex-none bg-transparent"
                             >
                               Edit
                             </Button> */}
-                            <Button
-                              size="sm"
-                              className="flex-1 sm:flex-none cursor-pointer bg-green-500"
-                              onClick={(e) => {
-                                handleRouteSelect(e, route);
-                              }}
-                            >
-                              Activate
-                            </Button>
+                                <Button
+                                  size="sm"
+                                  className="flex-1 sm:flex-none cursor-pointer bg-green-500"
+                                  onClick={(e) => {
+                                    handleRouteSelect(e, route);
+                                  }}
+                                >
+                                  Activate
+                                </Button>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                        );
+                      })
+                    : ""}
                 </div>
               </div>
             )}
@@ -1654,32 +1666,34 @@ const Dashboard = () => {
                     <div className="space-y-4">
                       <h3 className="font-medium">Emergency Contacts</h3>
                       <div className="space-y-2">
-                        {UserData.contacts.map((contact, index) => {
-                          return (
-                            <div
-                              className="flex items-center justify-between p-3 border rounded-lg flex-col gap-2.5"
-                              key={index}
-                            >
-                              <div>
-                                <p className="font-medium text-sm sm:text-base">
-                                  {contact.name}({contact.relation})
-                                </p>
-                                <p className="text-xs sm:text-sm text-gray-600">
-                                  {contact.email}
-                                </p>
-                              </div>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={(e) => {
-                                  handleNotifyContact(e, contact);
-                                }}
-                              >
-                                Notify
-                              </Button>
-                            </div>
-                          );
-                        })}
+                        {UserData?.contacts?.length > 0
+                          ? UserData.contacts.map((contact, index) => {
+                              return (
+                                <div
+                                  className="flex items-center justify-between p-3 border rounded-lg flex-col gap-2.5"
+                                  key={index}
+                                >
+                                  <div>
+                                    <p className="font-medium text-sm sm:text-base">
+                                      {contact.name}({contact.relation})
+                                    </p>
+                                    <p className="text-xs sm:text-sm text-gray-600">
+                                      {contact.email}
+                                    </p>
+                                  </div>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={(e) => {
+                                      handleNotifyContact(e, contact);
+                                    }}
+                                  >
+                                    Notify
+                                  </Button>
+                                </div>
+                              );
+                            })
+                          : ""}
                         {/* <Button
                           variant="outline"
                           className="w-full bg-transparent"
@@ -1878,62 +1892,64 @@ const Dashboard = () => {
 
                 {/* Feedback List */}
                 <div className="space-y-4 mb-8">
-                  {feedbackList.map((feedback, index) => (
-                    <motion.div
-                      key={feedback._id || index}
-                      className="border rounded-lg p-3 sm:p-4 hover:shadow-md transition-shadow"
-                      initial={{ opacity: 0, translateY: "-20%" }}
-                      whileInView={{
-                        opacity: 1,
-                        translateY: "0",
-                        transition: {
-                          duration: 0.6,
-                          ease: "easeOut",
-                          delay: index * 0.1,
-                        },
-                      }}
-                      viewport={{ once: true }}
-                    >
-                      <div className="flex flex-col gap-3">
-                        {/* User Info Header */}
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="flex items-center gap-3 min-w-0 flex-1">
-                            <img
-                              src={"/profile.svg"}
-                              alt={feedback.UserName}
-                              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex-shrink-0"
-                            />
-                            <div className="min-w-0 flex-1">
-                              <div className="flex items-center gap-2 mb-1">
-                                <h4 className="font-semibold text-sm sm:text-base truncate">
-                                  {feedback.UserName}
-                                </h4>
-                                {
-                                  <div
-                                    className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"
-                                    title="Verified User"
-                                  ></div>
-                                }
-                              </div>
-                              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                                {renderStars(feedback.ratings)}
-                                <span className="text-xs sm:text-sm text-gray-500">
-                                  {to12HourTime(feedback.createdAt)}
-                                </span>
+                  {Array.isArray(feedbackList) && feedbackList.length > 0
+                    ? feedbackList.map((feedback, index) => (
+                        <motion.div
+                          key={feedback._id || index}
+                          className="border rounded-lg p-3 sm:p-4 hover:shadow-md transition-shadow"
+                          initial={{ opacity: 0, translateY: "-20%" }}
+                          whileInView={{
+                            opacity: 1,
+                            translateY: "0",
+                            transition: {
+                              duration: 0.6,
+                              ease: "easeOut",
+                              delay: index * 0.1,
+                            },
+                          }}
+                          viewport={{ once: true }}
+                        >
+                          <div className="flex flex-col gap-3">
+                            {/* User Info Header */}
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="flex items-center gap-3 min-w-0 flex-1">
+                                <img
+                                  src={"/profile.svg"}
+                                  alt={feedback.UserName}
+                                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex-shrink-0"
+                                />
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <h4 className="font-semibold text-sm sm:text-base truncate">
+                                      {feedback.UserName}
+                                    </h4>
+                                    {
+                                      <div
+                                        className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"
+                                        title="Verified User"
+                                      ></div>
+                                    }
+                                  </div>
+                                  <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                                    {renderStars(feedback.ratings)}
+                                    <span className="text-xs sm:text-sm text-gray-500">
+                                      {to12HourTime(feedback.createdAt)}
+                                    </span>
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </div>
 
-                        {/* Feedback Comment */}
-                        <div className="pl-0 sm:pl-13">
-                          <p className="text-sm sm:text-base text-gray-700 leading-relaxed break-words">
-                            {feedback.comment}
-                          </p>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
+                            {/* Feedback Comment */}
+                            <div className="pl-0 sm:pl-13">
+                              <p className="text-sm sm:text-base text-gray-700 leading-relaxed break-words">
+                                {feedback.comment}
+                              </p>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))
+                    : ""}
                 </div>
 
                 {/* Submit New Feedback Form */}

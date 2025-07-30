@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Shield } from "lucide-react";
+import { Shield, Eye, EyeOff } from "lucide-react";
 import Button from "./Button";
 import { motion } from "motion/react";
 
@@ -13,6 +13,8 @@ const LoginPage = () => {
     password: "",
     rememberMe: false,
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -117,20 +119,20 @@ const LoginPage = () => {
                     htmlFor="email"
                     className="text-sm font-medium leading-none"
                   >
-                    University Email
+                    Email
                   </label>
                   <input
                     id="email"
                     name="email"
                     type="email"
-                    placeholder="your.name@university.edu"
+                    placeholder="your.name@gmail.com"
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     value={formData.email}
                     onChange={handleChange}
                     required
                   />
                 </div>
-                <div className="grid gap-2">
+                <div className="grid gap-2 relative">
                   <div className="flex items-center justify-between">
                     <label
                       htmlFor="password"
@@ -148,12 +150,20 @@ const LoginPage = () => {
                   <input
                     id="password"
                     name="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     value={formData.password}
                     onChange={handleChange}
                     required
                   />
+                  <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="absolute inset-y-0 right-2 top-[45%] flex items-center text-muted-foreground hover:text-foreground"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
                 </div>
                 {/* <div className="flex items-center space-x-2">
                   <input
@@ -205,8 +215,8 @@ const LoginPage = () => {
 
               <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
                 <p>
-                  SafeJourney is exclusively for verified university students.
-                  You must use your university email to register and log in.
+                  SafeJourney is exclusively for verified users only. You must
+                  use your email to register and log in.
                 </p>
               </div>
             </motion.div>

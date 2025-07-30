@@ -1,5 +1,12 @@
 import React, { useState, useRef } from "react";
-import { Shield, ArrowRight, CheckCircle, User } from "lucide-react";
+import {
+  Shield,
+  ArrowRight,
+  CheckCircle,
+  User,
+  Eye,
+  EyeOff,
+} from "lucide-react";
 import Button from "./Button";
 import { motion } from "motion/react";
 
@@ -43,6 +50,13 @@ const SignupPage = () => {
       },
     ],
   });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+  const toggleConfirmPasswordVisibility = () =>
+    setShowConfirmPassword((prev) => !prev);
 
   const token = localStorage.getItem("token");
 
@@ -356,8 +370,7 @@ const SignupPage = () => {
               Create your SafeJourney account
             </h1>
             <p className="mt-2 text-muted-foreground">
-              Join our community of university students traveling safely
-              together
+              Join our community of verified users traveling safely together
             </p>
           </div>
 
@@ -539,13 +552,13 @@ const SignupPage = () => {
                         required
                       />
                       <p className="text-xs text-muted-foreground">
-                        You must use your university email address for
+                        You must use your personal email address for
                         verification purposes
                       </p>
                     </div>
 
                     <div className="grid gap-4 md:grid-cols-2">
-                      <div className="space-y-2">
+                      <div className="space-y-2 relative">
                         <label
                           htmlFor="password"
                           className="text-sm font-medium leading-none"
@@ -555,14 +568,26 @@ const SignupPage = () => {
                         <input
                           id="password"
                           name="password"
-                          type="password"
+                          type={showPassword ? "text" : "password"}
                           className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                           value={formData.password}
                           onChange={handleChange}
                           required
                         />
+                        <button
+                          type="button"
+                          onClick={togglePasswordVisibility}
+                          className="absolute inset-y-0 right-2 top-[25%] flex items-center text-muted-foreground hover:text-foreground"
+                          tabIndex={-1}
+                        >
+                          {showPassword ? (
+                            <EyeOff size={16} />
+                          ) : (
+                            <Eye size={16} />
+                          )}
+                        </button>
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-2 relative">
                         <label
                           htmlFor="confirm-password"
                           className="text-sm font-medium leading-none"
@@ -572,12 +597,24 @@ const SignupPage = () => {
                         <input
                           id="confirm-password"
                           name="confirmPassword"
-                          type="password"
+                          type={showConfirmPassword ? "text" : "password"}
                           className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                           value={formData.confirmPassword}
                           onChange={handleChange}
                           required
                         />
+                        <button
+                          type="button"
+                          onClick={toggleConfirmPasswordVisibility}
+                          className="absolute inset-y-0 right-2 top-[25%] flex items-center text-muted-foreground hover:text-foreground"
+                          tabIndex={-1}
+                        >
+                          {showConfirmPassword ? (
+                            <EyeOff size={16} />
+                          ) : (
+                            <Eye size={16} />
+                          )}
+                        </button>
                       </div>
                       {formData.password !== formData.confirmPassword && (
                         <p className="text-red-500">
@@ -627,16 +664,16 @@ const SignupPage = () => {
                     Step 2: Verification
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    Verify your identity as a university student
+                    Verify your identity
                   </p>
                 </div>
                 <form onSubmit={handleStep2}>
                   <div className="p-6 space-y-6">
                     <div className="rounded-lg border bg-amber-50 p-4 text-amber-800">
                       <p className="text-sm">
-                        To ensure the safety of all users, we require
-                        verification of your university student status. This
-                        helps create a trusted community of verified students.
+                        To ensure the safety of all users, we require identity
+                        verification. This helps create a trusted community of
+                        verified members.
                       </p>
                     </div>
 
@@ -649,15 +686,15 @@ const SignupPage = () => {
                           <div>
                             <h3 className="font-medium">Email Verification</h3>
                             <p className="text-sm text-muted-foreground">
-                              We&apos;ll send a verification code to your
-                              university email address
+                              We&apos;ll send a verification code to your email
+                              address
                             </p>
                           </div>
                           <div className="space-y-2">
                             <div className="flex gap-2 flex-col sm:flex-row">
                               <input
                                 type="email"
-                                placeholder="your.name@university.edu"
+                                placeholder="your.name@gmail.com"
                                 className="flex h-10 flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                 value={formData.email}
                                 disabled
@@ -1087,9 +1124,9 @@ const SignupPage = () => {
                 </div>
                 <div className="p-6 space-y-4 text-center">
                   <p>
-                    We&apos;ve sent a verification email to your university
-                    email address. Please check your inbox and click the
-                    verification link to activate your account.
+                    We&apos;ve sent a verification email to your email address.
+                    Please check your inbox and click the verification link to
+                    activate your account.
                   </p>
                   <div className="rounded-lg border bg-muted p-4">
                     <h3 className="font-medium">Next Steps:</h3>

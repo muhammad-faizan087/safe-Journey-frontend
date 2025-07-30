@@ -145,8 +145,8 @@ const ForgotPasswordPage = () => {
                 Reset your password
               </h3>
               <p className="text-sm text-muted-foreground">
-                Enter your university email address and we&apos;ll send you a
-                link to reset your password
+                Enter your email address and we&apos;ll send you a verification
+                code to reset your password
               </p>
             </div>
             <form
@@ -172,10 +172,10 @@ const ForgotPasswordPage = () => {
                     required
                   />
                 </div> */}
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-col sm:flex-row">
                   <input
                     type="email"
-                    placeholder="your.name@university.edu"
+                    placeholder="your.name@gmail.com"
                     name="email"
                     className="flex h-10 flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     value={formData.email}
@@ -198,7 +198,7 @@ const ForgotPasswordPage = () => {
                     Send Code
                   </Button>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-col sm:flex-row">
                   <input
                     id="verification-code"
                     name="verificationCode"
@@ -260,7 +260,7 @@ const ForgotPasswordPage = () => {
           <div className="mt-4 text-center text-sm text-muted-foreground">
             Need help?{" "}
             <a
-              href="/contact"
+              href="#"
               className="font-medium text-rose-500 underline-offset-4 hover:underline"
             >
               Contact Support
