@@ -78,7 +78,7 @@ const Dashboard = () => {
   const getFeedbacks = async () => {
     try {
       const response = await fetch(
-        "import.meta.env.VITE_BackEnd_URL/feedback/getAllFeedbacks",
+        `${import.meta.env.VITE_BackEnd_URL}/feedback/getAllFeedbacks`,
         {
           method: "GET",
           headers: {
@@ -163,7 +163,7 @@ const Dashboard = () => {
   const postfeedback = async (UserName, UserEmail, ratings, comment) => {
     try {
       const response = await fetch(
-        "import.meta.env.VITE_BackEnd_URL/feedback",
+        `${import.meta.env.VITE_BackEnd_URL}/feedback`,
         {
           method: "POST",
           headers: {
@@ -257,7 +257,7 @@ const Dashboard = () => {
   const getConversations = async () => {
     try {
       const response = await fetch(
-        "import.meta.env.VITE_BackEnd_URL/message/getConversations",
+        `${import.meta.env.VITE_BackEnd_URL}/message/getConversations`,
         {
           method: "GET",
           credentials: "include",
@@ -288,7 +288,7 @@ const Dashboard = () => {
   const getUserData = async () => {
     try {
       const response = await fetch(
-        "import.meta.env.VITE_BackEnd_URL/dashboard",
+        `${import.meta.env.VITE_BackEnd_URL}/dashboard`,
         {
           credentials: "include",
           headers: {
@@ -402,7 +402,7 @@ const Dashboard = () => {
   ) => {
     try {
       const response = await fetch(
-        "import.meta.env.VITE_BackEnd_URL/journeys/deleteMatchedJourney",
+        `${import.meta.env.VITE_BackEnd_URL}/journeys/deleteMatchedJourney`,
         {
           method: "DELETE",
           headers: {
@@ -455,7 +455,9 @@ const Dashboard = () => {
   ) => {
     try {
       const res = await fetch(
-        "import.meta.env.VITE_BackEnd_URL/journeys/createJourneyAndGetCompanions",
+        `${
+          import.meta.env.VITE_BackEnd_URL
+        }/journeys/createJourneyAndGetCompanions`,
         {
           method: "POST",
           headers: {
@@ -511,7 +513,7 @@ const Dashboard = () => {
     if (!selectedChat) return;
     try {
       const response = await fetch(
-        "import.meta.env.VITE_BackEnd_URL/message/sendMessage/",
+        `${import.meta.env.VITE_BackEnd_URL}/message/sendMessage`,
         {
           method: "POST",
           headers: {
@@ -594,7 +596,7 @@ const Dashboard = () => {
   const sendNotification = async (receiverId, message, time) => {
     try {
       const res = await fetch(
-        "import.meta.env.VITE_BackEnd_URL/notify/sendNotification/",
+        `${import.meta.env.VITE_BackEnd_URL}/notify/sendNotification`,
         {
           method: "POST",
           headers: {
@@ -728,7 +730,7 @@ const Dashboard = () => {
   ) => {
     try {
       const response = await fetch(
-        "import.meta.env.VITE_BackEnd_URL/message/createConversation",
+        `${import.meta.env.VITE_BackEnd_URL}/message/createConversation`,
         {
           method: "POST",
           headers: {
@@ -817,7 +819,7 @@ const Dashboard = () => {
   const Notify = async (email) => {
     try {
       const response = await fetch(
-        "import.meta.env.VITE_BackEnd_URL/notify",
+        `${import.meta.env.VITE_BackEnd_URL}/notify`,
         {
           method: "POST",
           headers: {

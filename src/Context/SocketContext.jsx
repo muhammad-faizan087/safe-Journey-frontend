@@ -25,11 +25,11 @@ export const SocketProvider = ({ children }) => {
     // const token = getTokenFromCookie();
     const token = localStorage.getItem("token");
     console.log("Token:", token);
-    console.log("Connecting socket to:", "import.meta.env.VITE_BackEnd_URL");
+    console.log("Connecting socket to:", `${import.meta.env.VITE_BackEnd_URL}`);
 
     if (!token) return;
 
-    const socketInstance = io("import.meta.env.VITE_BackEnd_URL", {
+    const socketInstance = io(`${import.meta.env.VITE_BackEnd_URL}`, {
       transports: ["websocket"],
       upgrade: true,
       withCredentials: true,

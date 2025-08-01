@@ -137,20 +137,23 @@ const SignupPage = () => {
 
   const postData = async (firstName, lastName, email, password, gender) => {
     try {
-      const response = await fetch("import.meta.env.VITE_BackEnd_URL/signup", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          password,
-          gender,
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BackEnd_URL}/signup`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            email,
+            password,
+            gender,
+          }),
+        }
+      );
 
       const data = await response.json(); // Convert response to JSON
       console.log("Success:", data);
@@ -185,7 +188,7 @@ const SignupPage = () => {
   const postVCode = async (email) => {
     try {
       const response = await fetch(
-        "import.meta.env.VITE_BackEnd_URL/verification",
+        `${import.meta.env.VITE_BackEnd_URL}/verification`,
         {
           method: "POST",
           headers: {
@@ -208,7 +211,7 @@ const SignupPage = () => {
   const postContacts = async (email, contacts) => {
     try {
       const response = await fetch(
-        "import.meta.env.VITE_BackEnd_URL/verification/postContacts",
+        `${import.meta.env.VITE_BackEnd_URL}/verification/postContacts`,
         {
           method: "POST",
           headers: {
@@ -232,7 +235,7 @@ const SignupPage = () => {
   const postRoutes = async (email, routes) => {
     try {
       const response = await fetch(
-        "import.meta.env.VITE_BackEnd_URL/verification/postRoutes",
+        `${import.meta.env.VITE_BackEnd_URL}/verification/postRoutes`,
         {
           method: "POST",
           headers: {
@@ -261,7 +264,7 @@ const SignupPage = () => {
       if (back) formData.append("back", back);
 
       const response = await fetch(
-        "import.meta.env.VITE_BackEnd_URL/verification/postID",
+        `${import.meta.env.VITE_BackEnd_URL}/verification/postID`,
         {
           method: "POST",
           body: formData,
@@ -319,7 +322,7 @@ const SignupPage = () => {
   const verifyCode = async (code) => {
     try {
       const response = await fetch(
-        "import.meta.env.VITE_BackEnd_URL/verification/verfiyCode",
+        `${import.meta.env.VITE_BackEnd_URL}/verification/verfiyCode`,
         {
           method: "POST",
           headers: {

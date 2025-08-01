@@ -22,7 +22,7 @@ const ForgotPasswordPage = () => {
   const verifyCode = async (code) => {
     try {
       const response = await fetch(
-        "import.meta.env.VITE_BackEnd_URL/verification/verfiyCode",
+        `${import.meta.env.VITE_BackEnd_URL}/verification/verfiyCode`,
         {
           method: "POST",
           headers: {
@@ -50,7 +50,7 @@ const ForgotPasswordPage = () => {
   const postVCode = async (email) => {
     try {
       const response = await fetch(
-        "import.meta.env.VITE_BackEnd_URL/verification",
+        `${import.meta.env.VITE_BackEnd_URL}/verification`,
         {
           method: "POST",
           headers: {
@@ -73,7 +73,7 @@ const ForgotPasswordPage = () => {
   const ChangePass = async (email, newPassword) => {
     try {
       const res = await fetch(
-        "import.meta.env.VITE_BackEnd_URL/login/changePassword",
+        `${import.meta.env.VITE_BackEnd_URL}/login/changePassword`,
         {
           method: "POST",
           headers: {
