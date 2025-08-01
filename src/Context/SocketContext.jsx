@@ -25,24 +25,18 @@ export const SocketProvider = ({ children }) => {
     // const token = getTokenFromCookie();
     const token = localStorage.getItem("token");
     console.log("Token:", token);
-    console.log(
-      "Connecting socket to:",
-      "https://safejourney-backend-production.up.railway.app"
-    );
+    console.log("Connecting socket to:", "import.meta.env.VITE_BackEnd_URL");
 
     if (!token) return;
 
-    const socketInstance = io(
-      "https://safejourney-backend-production.up.railway.app",
-      {
-        transports: ["websocket"],
-        upgrade: true,
-        withCredentials: true,
-        auth: {
-          token,
-        },
-      }
-    );
+    const socketInstance = io("import.meta.env.VITE_BackEnd_URL", {
+      transports: ["websocket"],
+      upgrade: true,
+      withCredentials: true,
+      auth: {
+        token,
+      },
+    });
 
     setSocket(socketInstance);
 

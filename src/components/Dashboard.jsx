@@ -24,6 +24,7 @@ import {
   X,
   ArrowLeft,
   ArrowRight,
+  Loader2,
 } from "lucide-react";
 import Button from "./Button";
 
@@ -60,6 +61,7 @@ const Dashboard = () => {
   const searchRef = useRef();
   const { socket, OnlineUsers } = useSocketContext();
   const isListenerAttached = useRef(false);
+  const [loadingCompanionId, setLoadingCompanionId] = useState(null);
 
   const messagesEndRef = useRef();
   const matchedRef = useRef(false);
@@ -76,7 +78,7 @@ const Dashboard = () => {
   const getFeedbacks = async () => {
     try {
       const response = await fetch(
-        "https://safejourney-backend-production.up.railway.app/feedback/getAllFeedbacks",
+        "import.meta.env.VITE_BackEnd_URL/feedback/getAllFeedbacks",
         {
           method: "GET",
           headers: {
@@ -161,7 +163,7 @@ const Dashboard = () => {
   const postfeedback = async (UserName, UserEmail, ratings, comment) => {
     try {
       const response = await fetch(
-        "https://safejourney-backend-production.up.railway.app/feedback",
+        "import.meta.env.VITE_BackEnd_URL/feedback",
         {
           method: "POST",
           headers: {
@@ -255,7 +257,7 @@ const Dashboard = () => {
   const getConversations = async () => {
     try {
       const response = await fetch(
-        "https://safejourney-backend-production.up.railway.app/message/getConversations",
+        "import.meta.env.VITE_BackEnd_URL/message/getConversations",
         {
           method: "GET",
           credentials: "include",
@@ -286,7 +288,7 @@ const Dashboard = () => {
   const getUserData = async () => {
     try {
       const response = await fetch(
-        "https://safejourney-backend-production.up.railway.app/dashboard",
+        "import.meta.env.VITE_BackEnd_URL/dashboard",
         {
           credentials: "include",
           headers: {
@@ -323,7 +325,7 @@ const Dashboard = () => {
   // ) => {
   //   try {
   //     const response = await fetch(
-  //       "https://safejourney-backend-production.up.railway.app/journeys/create-journey",
+  //       "import.meta.env.VITE_BackEnd_URL/journeys/create-journey",
   //       {
   //         method: "POST",
   //         headers: {
@@ -364,7 +366,7 @@ const Dashboard = () => {
   // ) => {
   //   try {
   //     const response = await fetch(
-  //       "https://safejourney-backend-production.up.railway.app/journeys/getCompanions",
+  //       "import.meta.env.VITE_BackEnd_URL/journeys/getCompanions",
   //       {
   //         method: "POST",
   //         headers: {
@@ -400,7 +402,7 @@ const Dashboard = () => {
   ) => {
     try {
       const response = await fetch(
-        "https://safejourney-backend-production.up.railway.app/journeys/deleteMatchedJourney",
+        "import.meta.env.VITE_BackEnd_URL/journeys/deleteMatchedJourney",
         {
           method: "DELETE",
           headers: {
@@ -453,7 +455,7 @@ const Dashboard = () => {
   ) => {
     try {
       const res = await fetch(
-        "https://safejourney-backend-production.up.railway.app/journeys/createJourneyAndGetCompanions",
+        "import.meta.env.VITE_BackEnd_URL/journeys/createJourneyAndGetCompanions",
         {
           method: "POST",
           headers: {
@@ -509,7 +511,7 @@ const Dashboard = () => {
     if (!selectedChat) return;
     try {
       const response = await fetch(
-        "https://safejourney-backend-production.up.railway.app/message/sendMessage/",
+        "import.meta.env.VITE_BackEnd_URL/message/sendMessage/",
         {
           method: "POST",
           headers: {
@@ -592,7 +594,7 @@ const Dashboard = () => {
   const sendNotification = async (receiverId, message, time) => {
     try {
       const res = await fetch(
-        "https://safejourney-backend-production.up.railway.app/notify/sendNotification/",
+        "import.meta.env.VITE_BackEnd_URL/notify/sendNotification/",
         {
           method: "POST",
           headers: {
@@ -726,7 +728,7 @@ const Dashboard = () => {
   ) => {
     try {
       const response = await fetch(
-        "https://safejourney-backend-production.up.railway.app/message/createConversation",
+        "import.meta.env.VITE_BackEnd_URL/message/createConversation",
         {
           method: "POST",
           headers: {
@@ -753,8 +755,9 @@ const Dashboard = () => {
 
   const startChat = async (e, companion) => {
     console.log("Starting chat with companion:", companion);
-    e.target.textContent = "...";
+    // e.target.textContent = "...";
     e.target.disabled = true;
+    setLoadingCompanionId(companion.user._id);
     await createConversation(
       companion.user._id,
       companion.user.firstName + " " + companion.user.lastName,
@@ -767,8 +770,9 @@ const Dashboard = () => {
     setActiveTab("messages");
     setShowMobileChat(true);
     setSidebarOpen(false);
-    e.target.textContent = "Message";
+    // e.target.textContent = "Message";
     e.target.disabled = false;
+    setLoadingCompanionId(null);
   };
 
   const handleTabChange = (tab) => {
@@ -813,7 +817,7 @@ const Dashboard = () => {
   const Notify = async (email) => {
     try {
       const response = await fetch(
-        "https://safejourney-backend-production.up.railway.app/notify",
+        "import.meta.env.VITE_BackEnd_URL/notify",
         {
           method: "POST",
           headers: {
@@ -1366,7 +1370,12 @@ const Dashboard = () => {
                                   }}
                                   className="flex-1 sm:flex-none"
                                 >
-                                  <MessageCircle className="h-4 w-4 mr-1" />
+                                  {/* <MessageCircle className="h-4 w-4 mr-1" /> */}
+                                  {loadingCompanionId === companion.user._id ? (
+                                    <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                                  ) : (
+                                    <MessageCircle className="h-4 w-4 mr-1" />
+                                  )}
                                   <span className="hidden sm:inline">
                                     Message
                                   </span>
@@ -1464,7 +1473,6 @@ const Dashboard = () => {
                             </div>
                           ))
                         : ""}
-                      ;
                     </div>
                   </div>
 

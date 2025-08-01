@@ -26,21 +26,18 @@ const LoginPage = () => {
 
   const validateUser = async (email, password) => {
     try {
-      const response = await fetch(
-        "https://safejourney-backend-production.up.railway.app/login",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        }
-      );
+      const response = await fetch("import.meta.env.VITE_BackEnd_URL/login", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
 
       const data = await response.json();
       console.log("Success:", data);
