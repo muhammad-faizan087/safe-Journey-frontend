@@ -488,7 +488,7 @@ const Dashboard = () => {
     searchRef.current.blur();
     searchRef.current.disabled = true;
     searchRef.current.textContent = "Searching...";
-    console.log(searchData.origin, searchData.destination);
+    console.log(searchData.time);
     await createJourneyAndGetCompanions(
       UserData.email,
       searchData.origin,
@@ -1459,11 +1459,13 @@ const Dashboard = () => {
                                         : chat.receiverName}
                                     </h4>
                                     <span className="text-xs text-gray-500">
-                                      {chat.time ? chat.time : "Just now"}
+                                      {chat.lastMessageTime
+                                        ? to12HourTime(chat.lastMessageTime)
+                                        : ""}
                                     </span>
                                   </div>
                                   <p className="text-xs sm:text-sm text-gray-600 truncate">
-                                    {chat.lastMessage}
+                                    {chat.lastMessage || ""}
                                   </p>
                                 </div>
                                 {/* {chat.unread > 0 && (
