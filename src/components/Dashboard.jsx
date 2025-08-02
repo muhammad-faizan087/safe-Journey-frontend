@@ -438,10 +438,11 @@ const Dashboard = () => {
 
   function to12HourTime(isoString) {
     const date = new Date(isoString);
-    return date.toLocaleTimeString([], {
+    return date.toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
       hour12: true,
+      timeZone: "Asia/Karachi", // or your target local timezone
     });
   }
 
@@ -539,6 +540,11 @@ const Dashboard = () => {
   const getReceiverId = () => {
     if (!selectedChat || !UserData) return null;
     return selectedChat.participants.find((id) => id !== UserData.id);
+  };
+
+  const getOtherUserId = (chat) => {
+    if (!chat || !UserData) return null;
+    return chat.participants.find((id) => id !== UserData.id);
   };
 
   // const handleSendMessage = async (e) => {
@@ -1444,7 +1450,9 @@ const Dashboard = () => {
                                     }
                                     className="w-10 h-10 rounded-full"
                                   />
-                                  {OnlineUsers.includes(getReceiverId()) && (
+                                  {OnlineUsers.includes(
+                                    getOtherUserId(chat)
+                                  ) && (
                                     <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                                   )}
                                 </div>
@@ -1459,9 +1467,7 @@ const Dashboard = () => {
                                         : chat.receiverName}
                                     </h4>
                                     <span className="text-xs text-gray-500">
-                                      {chat.lastMessageTime
-                                        ? to12HourTime(chat.lastMessageTime)
-                                        : ""}
+                                      {chat.time ? chat.time : ""}
                                     </span>
                                   </div>
                                   <p className="text-xs sm:text-sm text-gray-600 truncate">
