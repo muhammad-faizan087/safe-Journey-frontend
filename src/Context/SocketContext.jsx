@@ -24,8 +24,8 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     // const token = getTokenFromCookie();
     const token = localStorage.getItem("token");
-    console.log("Token:", token);
-    console.log("Connecting socket to:", `${import.meta.env.VITE_BackEnd_URL}`);
+    // console.log("Token:", token);
+    // console.log("Connecting socket to:", `${import.meta.env.VITE_BackEnd_URL}`);
 
     if (!token) return;
 
@@ -40,17 +40,17 @@ export const SocketProvider = ({ children }) => {
 
     setSocket(socketInstance);
 
-    socketInstance.on("connect", () => {
-      console.log("Socket connected:", socketInstance.id);
-    });
+    // socketInstance.on("connect", () => {
+    //   console.log("Socket connected:", socketInstance.id);
+    // });
 
-    socketInstance.on("disconnect", () => {
-      console.log("Socket disconnected");
-    });
+    // socketInstance.on("disconnect", () => {
+    //   console.log("Socket disconnected");
+    // });
 
     socketInstance.on("getOnlineUsers", (users) => {
       setOnlineUsers(users);
-      console.log("Updated online users:", users);
+      // console.log("Updated online users:", users);
     });
 
     socketInstance.on("connect_error", (err) => {

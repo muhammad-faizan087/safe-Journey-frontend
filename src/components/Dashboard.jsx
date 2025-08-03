@@ -88,7 +88,7 @@ const Dashboard = () => {
         }
       );
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setfeedbackList(data.feedbacks);
     } catch (error) {
       console.log(error);
@@ -179,7 +179,7 @@ const Dashboard = () => {
         }
       );
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       if (data.success) {
         setfeedbackList((prev) => [...prev, data.feedback]);
       }
@@ -193,7 +193,7 @@ const Dashboard = () => {
   const handleSubmitFeedback = async (e) => {
     e.preventDefault();
     if (newFeedback.rating > 0 && newFeedback.comment.trim()) {
-      console.log("Submitting feedback:", newFeedback);
+      // console.log("Submitting feedback:", newFeedback);
       await postfeedback(
         UserName,
         UserData.email,
@@ -419,7 +419,7 @@ const Dashboard = () => {
         }
       );
       const data = await response.json();
-      console.log("Matched journey deleted:", data);
+      // console.log("Matched journey deleted:", data);
     } catch (error) {
       console.log("Error deleting matched journey:", error);
     }
@@ -477,7 +477,7 @@ const Dashboard = () => {
         }
       );
       const { companions, journey } = await res.json();
-      console.log("Companions:", companions);
+      // console.log("Companions:", companions);
       setCompanions(companions);
     } catch (error) {
       console.log("Error creating journey", error);
@@ -489,7 +489,7 @@ const Dashboard = () => {
     searchRef.current.blur();
     searchRef.current.disabled = true;
     searchRef.current.textContent = "Searching...";
-    console.log(searchData.time);
+    // console.log(searchData.time);
     await createJourneyAndGetCompanions(
       UserData.email,
       searchData.origin,
@@ -530,7 +530,7 @@ const Dashboard = () => {
         }
       );
       const data = await response.json();
-      console.log("Message sent:", data);
+      // console.log("Message sent:", data);
       return data.newMessage;
     } catch (error) {
       console.log("Error sending message:", error);
@@ -618,7 +618,7 @@ const Dashboard = () => {
         }
       );
       const data = await res.json();
-      console.log(data);
+      // console.log(data);
       setNotificationsArray((prev) => [{ message, time }, ...prev]);
     } catch (error) {
       console.log(error);
@@ -645,14 +645,14 @@ const Dashboard = () => {
       )
         return;
 
-      console.log("📥 Socket message received:", {
-        message,
-        conversationId,
-        senderName,
-        receiverName,
-        type,
-        receiverId,
-      });
+      // console.log("📥 Socket message received:", {
+      //   message,
+      //   conversationId,
+      //   senderName,
+      //   receiverName,
+      //   type,
+      //   receiverId,
+      // });
 
       if (type === "Received") {
         const notification = new Audio(sound);
@@ -755,14 +755,14 @@ const Dashboard = () => {
         }
       );
       const data = await response.json();
-      console.log("Success:", data.success, "data:", data);
+      // console.log("Success:", data.success, "data:", data);
     } catch (error) {
       console.log("Error creating conversation:", error);
     }
   };
 
   const startChat = async (e, companion) => {
-    console.log("Starting chat with companion:", companion);
+    // console.log("Starting chat with companion:", companion);
     // e.target.textContent = "...";
     e.target.disabled = true;
     setLoadingCompanionId(companion.user._id);
@@ -839,7 +839,7 @@ const Dashboard = () => {
         }
       );
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.log("Error:", error);
     }
@@ -1185,6 +1185,9 @@ const Dashboard = () => {
                   >
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <AutoPlaceInput
+                        id="search-origin"
+                        name="origin"
+                        required={true}
                         label="From"
                         value={searchData.origin}
                         onChange={(val) =>
@@ -1193,6 +1196,9 @@ const Dashboard = () => {
                       />
 
                       <AutoPlaceInput
+                        id="search-destination"
+                        name="destination"
+                        required={true}
                         label="To"
                         value={searchData.destination}
                         onChange={(val) =>
@@ -1435,7 +1441,7 @@ const Dashboard = () => {
                                   : ""
                               }`}
                             >
-                              {console.log(chat)}
+                              {/* {console.log(chat)} */}
                               <div className="flex items-center gap-3">
                                 <div className="relative">
                                   <img

@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import Button from "./Button";
 import { motion } from "motion/react";
+import AutoPlaceInput from "./Api try.jsx";
 
 const SignupPage = () => {
   const [step, setStep] = useState(1);
@@ -155,8 +156,8 @@ const SignupPage = () => {
         }
       );
 
-      const data = await response.json(); // Convert response to JSON
-      console.log("Success:", data);
+      const data = await response.json();
+      // console.log("Success:", data);
       return data;
     } catch (error) {
       console.error("Error:", error);
@@ -201,8 +202,8 @@ const SignupPage = () => {
         }
       );
 
-      const data = await response.json(); // Convert response to JSON
-      console.log("Success:", data);
+      const data = await response.json();
+      // console.log("Success:", data);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -225,8 +226,8 @@ const SignupPage = () => {
         }
       );
 
-      const data = await response.json(); // Convert response to JSON
-      console.log("Success:", data);
+      const data = await response.json();
+      // console.log("Success:", data);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -249,8 +250,8 @@ const SignupPage = () => {
         }
       );
 
-      const data = await response.json(); // Convert response to JSON
-      console.log("Success:", data);
+      const data = await response.json();
+      // console.log("Success:", data);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -276,7 +277,7 @@ const SignupPage = () => {
       );
 
       const data = await response.json();
-      console.log("Success:", data);
+      // console.log("Success:", data);
       return data;
     } catch (error) {
       console.error("Error uploading Student ID:", error);
@@ -335,8 +336,8 @@ const SignupPage = () => {
         }
       );
 
-      const data = await response.json(); // Convert response to JSON
-      console.log("Success:", data);
+      const data = await response.json();
+      // console.log("Success:", data);
       if (data.success) {
         VerifyRef.current.disabled = true;
         // VerificationCodeRef.current.disabled = true;
@@ -1033,7 +1034,7 @@ const SignupPage = () => {
                                 </div>
 
                                 <div className="grid gap-4 md:grid-cols-2">
-                                  <div className="space-y-2">
+                                  {/* <div className="space-y-2">
                                     <label
                                       htmlFor={`route-from-${index}`}
                                       className="text-sm font-medium leading-none"
@@ -1051,9 +1052,26 @@ const SignupPage = () => {
                                         handleChange(e, index, "route")
                                       }
                                     />
-                                  </div>
+                                  </div> */}
+                                  <AutoPlaceInput
+                                    name={`route.from`} // or `route.to`
+                                    id={`route-from-${index}`}
+                                    label="From"
+                                    required={true}
+                                    value={route.from}
+                                    onChange={(val) =>
+                                      setFormData((prev) => {
+                                        const updatedRoutes = [...prev.route];
+                                        updatedRoutes[index].from = val;
+                                        return {
+                                          ...prev,
+                                          route: updatedRoutes,
+                                        };
+                                      })
+                                    }
+                                  />
 
-                                  <div className="space-y-2">
+                                  {/* <div className="space-y-2">
                                     <label
                                       htmlFor={`route-to-${index}`}
                                       className="text-sm font-medium leading-none"
@@ -1071,7 +1089,24 @@ const SignupPage = () => {
                                         handleChange(e, index, "route")
                                       }
                                     />
-                                  </div>
+                                  </div> */}
+                                  <AutoPlaceInput
+                                    name={`route.to`} // or `route.to`
+                                    id={`route-to-${index}`}
+                                    label="To"
+                                    required={true}
+                                    value={route.to}
+                                    onChange={(val) =>
+                                      setFormData((prev) => {
+                                        const updatedRoutes = [...prev.route];
+                                        updatedRoutes[index].to = val;
+                                        return {
+                                          ...prev,
+                                          route: updatedRoutes,
+                                        };
+                                      })
+                                    }
+                                  />
                                 </div>
                               </div>
                             </div>

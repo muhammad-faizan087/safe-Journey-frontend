@@ -35,8 +35,8 @@ const ForgotPasswordPage = () => {
         }
       );
 
-      const data = await response.json(); // Convert response to JSON
-      console.log("Success:", data);
+      const data = await response.json();
+      // console.log("Success:", data);
       if (data.success) {
         VerifyRef.current.disabled = true;
         // VerificationCodeRef.current.disabled = true;
@@ -63,8 +63,8 @@ const ForgotPasswordPage = () => {
         }
       );
 
-      const data = await response.json(); // Convert response to JSON
-      console.log("Success:", data);
+      const data = await response.json();
+      // console.log("Success:", data);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -88,10 +88,10 @@ const ForgotPasswordPage = () => {
       );
 
       const data = await res.json();
-      console.log("Success:", data);
+      // console.log("Success:", data);
       setresponse(data);
     } catch (error) {
-      console.log("Error Changing Password", error);
+      // console.log("Error Changing Password", error);
       setresponse(error);
     }
     setresMessage(true);

@@ -1,8 +1,7 @@
-// components/AutoPlaceInput.jsx
 import React, { useState, useCallback, useEffect } from "react";
 import debounce from "lodash.debounce";
 
-const AutoPlaceInput = ({ label, value, onChange }) => {
+const AutoPlaceInput = ({ label, value, onChange, id, required, name }) => {
   const [input, setInput] = useState(value);
   const [suggestions, setSuggestions] = useState([]);
 
@@ -55,11 +54,13 @@ const AutoPlaceInput = ({ label, value, onChange }) => {
       <label className="block text-sm font-medium mb-2">{label}</label>
       <input
         type="text"
+        id={id}
+        required={required}
+        name={name}
         value={input}
         onChange={handleChange}
         placeholder={`Enter ${label.toLowerCase()} location`}
         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent text-sm sm:text-base"
-        required
       />
       {suggestions.length > 0 && (
         <ul className="absolute z-10 bg-white border border-gray-300 w-full rounded-lg max-h-40 overflow-y-auto shadow-md mt-1 text-sm">

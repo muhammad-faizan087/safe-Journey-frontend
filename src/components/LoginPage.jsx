@@ -43,7 +43,7 @@ const LoginPage = () => {
       );
 
       const data = await response.json();
-      console.log("Success:", data);
+      // console.log("Success:", data);
       if (data.success) {
         localStorage.setItem("token", data.token);
         window.location.href = "/main";
