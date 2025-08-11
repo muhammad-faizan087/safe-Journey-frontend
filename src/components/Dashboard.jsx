@@ -428,6 +428,7 @@ const Dashboard = () => {
   const handleMatched = async (e) => {
     // e.preventDefault();
     matchedRef.current.disabled = true;
+    matchedRef.current.textContent = "Matched";
     await deleteMatchedJourney(
       selectedChat.receiverEmail,
       selectedChat.senderEmail,
@@ -771,7 +772,7 @@ const Dashboard = () => {
       companion.user.firstName + " " + companion.user.lastName,
       UserData.firstName + " " + UserData.lastName,
       companion.journey.from.address,
-      companion.journey.to,
+      companion.journey.to.address,
       UserData.email
     );
     await getConversations();
@@ -839,6 +840,7 @@ const Dashboard = () => {
         }
       );
       const data = await response.json();
+      return data;
       // console.log(data);
     } catch (error) {
       console.log("Error:", error);
@@ -848,8 +850,14 @@ const Dashboard = () => {
   const handleNotifyContact = async (e, contact) => {
     e.preventDefault();
     e.target.textContent = "Notifying...";
-    await Notify(contact.email);
-    e.target.textContent = "Notify";
+    e.target.disabled = true;
+    const data = await Notify(contact.email);
+    if (data?.success) {
+      e.target.textContent = "Notified";
+    } else {
+      e.target.textContent = "Try Again";
+      e.target.disabled = false;
+    }
   };
 
   return (
@@ -1539,7 +1547,7 @@ const Dashboard = () => {
                               ref={matchedRef}
                               onClick={handleMatched}
                             >
-                              Matched
+                              Match
                             </Button>
                           </div>
                         </div>

@@ -18,6 +18,7 @@ const SignupPage = () => {
   const VerifyRef = useRef();
   const VerificationCodeRef = useRef();
   const ResendCodeRef = useRef();
+  const [resendCodeDisable, setresendCodeDisable] = useState(false);
   const EmergencyContactsRef = useRef();
   const UserEmail = useRef("");
   const step1ContinueRef = useRef();
@@ -339,11 +340,14 @@ const SignupPage = () => {
       const data = await response.json();
       // console.log("Success:", data);
       if (data.success) {
-        VerifyRef.current.disabled = true;
+        VerifyRef.current.textContent = "Verified";
         // VerificationCodeRef.current.disabled = true;
         ResendCodeRef.current.disabled = true;
+        setresendCodeDisable(true);
         setVerified(true);
       }
+      VerifyRef.current.disabled = false;
+      VerifyRef.current.textContent = "Verify";
     } catch (error) {
       console.error("Error:", error);
     }
@@ -645,7 +649,9 @@ const SignupPage = () => {
                         <ArrowRight className="h-4 w-4" />
                       </Button>
                     </div>
-                    {Exists && <p className="text-red-500">{Message}</p>}
+                    <div className="px-6">
+                      {Exists && <p className="text-red-500">{Message}</p>}
+                    </div>
                   </div>
                 </form>
               </>
@@ -734,6 +740,8 @@ const SignupPage = () => {
                                 type="button"
                                 className="cursor-pointer"
                                 onClick={(e) => {
+                                  e.target.textContent = "Verifying...";
+                                  e.target.disabled = true;
                                   verifyCode(
                                     e.target.previousElementSibling.value
                                   );
@@ -752,7 +760,11 @@ const SignupPage = () => {
                               <span>Didn&apos;t receive the code?</span>
                               <button
                                 type="button"
-                                className="text-rose-500 hover:underline cursor-pointer"
+                                className={`${
+                                  resendCodeDisable
+                                    ? "text-rose-300"
+                                    : "text-rose-500"
+                                } hover:underline cursor-pointer`}
                                 ref={ResendCodeRef}
                               >
                                 Resend code
@@ -1158,21 +1170,21 @@ const SignupPage = () => {
                   </p>
                 </div>
                 <div className="p-6 space-y-4 text-center">
-                  <p>
+                  {/* <p>
                     We&apos;ve sent a verification email to your email address.
                     Please check your inbox and click the verification link to
                     activate your account.
-                  </p>
+                  </p> */}
                   <div className="rounded-lg border bg-muted p-4">
                     <h3 className="font-medium">Next Steps:</h3>
                     <ul className="mt-2 space-y-2 text-sm">
                       <li className="flex items-center gap-2">
                         <CheckCircle className="h-4 w-4 text-green-600" />
-                        <span>Verify your email address</span>
+                        <span>Login to your account</span>
                       </li>
                       <li className="flex items-center gap-2">
                         <CheckCircle className="h-4 w-4 text-green-600" />
-                        <span>Complete your profile with a photo and bio</span>
+                        <span>Go through all the features</span>
                       </li>
                       <li className="flex items-center gap-2">
                         <CheckCircle className="h-4 w-4 text-green-600" />
@@ -1184,6 +1196,12 @@ const SignupPage = () => {
                         <CheckCircle className="h-4 w-4 text-green-600" />
                         <span>
                           Find travel companions for your next journey
+                        </span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span>
+                          Give your feedback to help us improve the app
                         </span>
                       </li>
                     </ul>
