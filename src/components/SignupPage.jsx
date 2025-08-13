@@ -795,13 +795,13 @@ const SignupPage = () => {
                                 htmlFor="id-front"
                                 className="text-xs font-medium"
                               >
-                                Front of ID
+                                Front of ID(Optional)
                               </label>
                               <input
                                 id="id-front"
                                 name="idFront"
                                 type="file"
-                                required={true}
+                                // required={true}
                                 className="mt-1 flex cursor-pointer w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                 onChange={handleChange}
                               />
@@ -811,13 +811,13 @@ const SignupPage = () => {
                                 htmlFor="id-back"
                                 className="text-xs font-medium"
                               >
-                                Back of ID (optional)
+                                Back of ID (Optional)
                               </label>
                               <input
                                 id="id-back"
                                 name="idBack"
                                 type="file"
-                                required={true}
+                                // required={true}
                                 className="mt-1 flex w-full cursor-pointer rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                 onChange={handleChange}
                               />
