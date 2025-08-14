@@ -685,24 +685,26 @@ const SignupPage = () => {
                     </div>
 
                     <div className="space-y-4">
-                      <div className="flex items-start gap-4 rounded-lg border p-4">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-100">
-                          <CheckCircle className="h-5 w-5 text-rose-500" />
+                      <div className="flex items-start gap-2 sm:gap-4 rounded-lg border p-2 sm:p-4">
+                        <div className="flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-rose-100">
+                          <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-rose-500" />
                         </div>
-                        <div className="flex-1 space-y-3">
+                        <div className="flex-1 min-w-0 space-y-3">
                           <div>
-                            <h3 className="font-medium">Email Verification</h3>
-                            <p className="text-sm text-muted-foreground">
+                            <h3 className="font-medium text-sm sm:text-base">
+                              Email Verification
+                            </h3>
+                            <p className="text-xs sm:text-sm text-muted-foreground">
                               We&apos;ll send a verification code to your email
                               address
                             </p>
                           </div>
                           <div className="space-y-2">
-                            <div className="flex gap-2 flex-col sm:flex-row">
+                            <div className="flex gap-2 flex-col">
                               <input
                                 type="email"
                                 placeholder="your.name@gmail.com"
-                                className="flex h-10 flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="flex h-10 w-full min-w-0 rounded-md border border-input bg-background px-2 sm:px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                 value={formData.email}
                                 disabled
                               />
@@ -710,7 +712,7 @@ const SignupPage = () => {
                                 variant="outline"
                                 size="sm"
                                 type="button"
-                                className="cursor-pointer"
+                                className="cursor-pointer w-full sm:w-auto"
                                 onClick={(e) => {
                                   e.target.textContent = "Sent";
                                   e.target.disabled = true;
@@ -723,22 +725,21 @@ const SignupPage = () => {
                                 Send Code
                               </Button>
                             </div>
-                            <div className="flex gap-2 flex-col sm:flex-row">
+                            <div className="flex gap-2 flex-col">
                               <input
                                 id="verification-code"
                                 name="verificationCode"
                                 placeholder="Enter 6-digit code"
                                 maxLength="6"
-                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="flex h-10 w-full min-w-0 rounded-md border border-input bg-background px-2 sm:px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                 value={formData.verificationCode || ""}
                                 onChange={handleChange}
                               />
-
                               <Button
                                 variant="outline"
                                 size="sm"
                                 type="button"
-                                className="cursor-pointer"
+                                className="cursor-pointer w-full sm:w-auto"
                                 onClick={(e) => {
                                   e.target.textContent = "Verifying...";
                                   e.target.disabled = true;
@@ -752,11 +753,11 @@ const SignupPage = () => {
                               </Button>
                             </div>
                             {Verified && (
-                              <p className="text-green-500">
+                              <p className="text-green-500 text-sm">
                                 Email Verified Successfully.
                               </p>
                             )}
-                            <div className="flex items-center justify-between text-xs text-muted-foreground">
+                            <div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-2 text-xs text-muted-foreground">
                               <span>Didn&apos;t receive the code?</span>
                               <button
                                 type="button"
@@ -764,7 +765,7 @@ const SignupPage = () => {
                                   resendCodeDisable
                                     ? "text-rose-300"
                                     : "text-rose-500"
-                                } hover:underline cursor-pointer`}
+                                } hover:underline cursor-pointer text-left xs:text-right`}
                                 ref={ResendCodeRef}
                               >
                                 Resend code
@@ -782,10 +783,10 @@ const SignupPage = () => {
                           <CheckCircle className="h-5 w-5 text-rose-500" />
                         </div>
                         <div className="space-y-2">
-                          <h3 className="font-medium">
+                          <h3 className="font-medium text-sm sm:text-base">
                             Student ID Verification
                           </h3>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-xs sm:text-sm text-muted-foreground">
                             Upload a photo of your student ID card (you can blur
                             out sensitive information)
                           </p>
