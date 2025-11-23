@@ -54,7 +54,7 @@ export const SocketProvider = ({ children }) => {
     });
 
     socketInstance.on("connect_error", (err) => {
-      console.error("❌ Socket connection error:", err.message);
+      console.error("Socket connection error:", err.message);
     });
 
     return () => {

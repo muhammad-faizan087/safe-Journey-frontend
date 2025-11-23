@@ -99,59 +99,6 @@ const Dashboard = () => {
     getFeedbacks();
   }, []);
 
-  // const feedbackList = [
-  //   {
-  //     id: 1,
-  //     userName: "Sarah Johnson",
-  //     userAvatar: "/profile.svg",
-  //     rating: 5,
-  //     comment:
-  //       "Amazing experience! The app made it so easy to find reliable travel companions. I felt completely safe throughout my journey and made a new friend too!",
-  //     date: "2024-01-15",
-  //     verified: true,
-  //   },
-  //   {
-  //     id: 2,
-  //     userName: "Mike Chen",
-  //     userAvatar: "/profile.svg",
-  //     rating: 4,
-  //     comment:
-  //       "Great concept and execution. The verification process gives me confidence in the safety of other users. Only minor suggestion would be to add more filter options.",
-  //     date: "2024-01-12",
-  //     verified: true,
-  //   },
-  //   {
-  //     id: 3,
-  //     userName: "Emma Davis",
-  //     userAvatar: "/profile.svg",
-  //     rating: 5,
-  //     comment:
-  //       "This app has revolutionized how I travel to and from campus. The safety features are top-notch and the community is very welcoming. Highly recommended!",
-  //     date: "2024-01-10",
-  //     verified: true,
-  //   },
-  //   {
-  //     id: 4,
-  //     userName: "Alex Rodriguez",
-  //     userAvatar: "/profile.svg",
-  //     rating: 4,
-  //     comment:
-  //       "Very useful for finding travel companions. The messaging system works well and I appreciate the emergency contact features.",
-  //     date: "2024-01-08",
-  //     verified: false,
-  //   },
-  //   {
-  //     id: 5,
-  //     userName: "Jessica Lee",
-  //     userAvatar: "/profile.svg",
-  //     rating: 5,
-  //     comment:
-  //       "Excellent app! As a female student, safety is my top priority and SafeJourney delivers on all fronts. The verification process is thorough and the user interface is intuitive.",
-  //     date: "2024-01-05",
-  //     verified: true,
-  //   },
-  // ];
-
   const handleRatingClick = (rating) => {
     setNewFeedback({ ...newFeedback, rating });
   };
@@ -315,85 +262,6 @@ const Dashboard = () => {
     WaitgettingData();
   }, []);
 
-  // const postJourneyDetails = async (
-  //   fromAddress,
-  //   toAddress,
-  //   date,
-  //   time,
-  //   status,
-  //   email
-  // ) => {
-  //   try {
-  //     const response = await fetch(
-  //       "import.meta.env.VITE_BackEnd_URL/journeys/create-journey",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         credentials: "include",
-  //         body: JSON.stringify({
-  //           fromAddress,
-  //           toAddress,
-  //           date,
-  //           time,
-  //           status,
-  //           email,
-  //         }),
-  //       }
-  //     );
-  //     const data = await response.json();
-  //     console.log("Data:", data);
-  //   } catch (error) {
-  //     console.log("Error:", error);
-  //   }
-  // };
-
-  // function filterOutCurrentUser(companions, currentUserEmail) {
-  //   return companions.filter((companion) => {
-  //     return (
-  //       companion?.user?.email && companion.user.email !== currentUserEmail
-  //     );
-  //   });
-  // }
-
-  // const getTravelCompanions = async (
-  //   origin,
-  //   destination,
-  //   date,
-  //   time,
-  //   email
-  // ) => {
-  //   try {
-  //     const response = await fetch(
-  //       "import.meta.env.VITE_BackEnd_URL/journeys/getCompanions",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         credentials: "include",
-  //         body: JSON.stringify({
-  //           origin,
-  //           destination,
-  //           date,
-  //           time,
-  //           email,
-  //         }),
-  //       }
-  //     );
-  //     const data = await response.json();
-  //     const filteredCompanions = filterOutCurrentUser(
-  //       data.companions,
-  //       UserData.email
-  //     );
-  //     console.log(data.companions);
-  //     setCompanions(data.companions);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const deleteMatchedJourney = async (
     receiverEmail,
     senderEmail,
@@ -548,19 +416,6 @@ const Dashboard = () => {
     return chat.participants.find((id) => id !== UserData.id);
   };
 
-  // const handleSendMessage = async (e) => {
-  //   e.preventDefault();
-  //   MessageButtonRef.current.disabled = true;
-  //   const receiverId = getReceiverId();
-  //   if (message.trim() && receiverId) {
-  //     const newMessage = await sendMessage(receiverId, message, UserData.email);
-  //     MessageButtonRef.current.disabled = false;
-  //     console.log("New message:", newMessage);
-  //     console.log("📤 Socket message emitted:", newMessage);
-  //     setMessage("");
-  //   }
-  // };
-
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!message.trim()) return;
@@ -645,15 +500,6 @@ const Dashboard = () => {
         !receiverId
       )
         return;
-
-      // console.log("📥 Socket message received:", {
-      //   message,
-      //   conversationId,
-      //   senderName,
-      //   receiverName,
-      //   type,
-      //   receiverId,
-      // });
 
       if (type === "Received") {
         const notification = new Audio(sound);
